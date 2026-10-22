@@ -1,0 +1,43 @@
+# ============ MAVEN ============
+# Artefactos de compilación (se regeneran con F11, nunca se suben)
+target/
+
+# ============ JAVA ============
+*.class
+*.war
+*.ear
+
+# ============ NETBEANS ============
+nbproject/private/
+build/
+dist/
+# nb-configuration.xml SÍ se sube (comparte la config del proyecto al equipo)
+
+# ============ IDEs / Editores ============
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# ============ SISTEMA OPERATIVO ============
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# ============ LOGS ============
+*.log
+logs/
+
+# ============ SECRETOS (futuro: API key de Groq, etc.) ============
+# Cuando agreguemos la API key, que viva en un archivo NO trackeado
+.env
+.env*
+*api-key*
+secrets.*
+*credential*
+
+# ============ IMPORTANTE: esto NO se ignora ============
+# native/mssql-jdbc_auth....dll  → SÍ se sube (310 KB, tu compañera lo
+# recibe del repo sin descargar nada aparte)
