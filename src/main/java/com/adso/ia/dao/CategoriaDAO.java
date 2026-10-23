@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CategoriaDAO {
 
-    public List<Categoria> listarCategoria() throws SQLException {
+    public List<Categoria> listarCategorias() throws SQLException {
         String consulta = "Select * from categorias";
         List<Categoria> lista = new ArrayList<>();
 

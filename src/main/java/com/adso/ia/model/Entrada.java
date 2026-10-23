@@ -11,11 +11,12 @@ public class Entrada {
     private String proveedor;
     private LocalDateTime fecha;
     private String observaciones;
+    private String nombreProducto;
 
     public Entrada() {
     }
 
-    public Entrada(int id, int idProducto, int cantidad, double precioUnitario, String proveedor, LocalDateTime fecha, String observaciones) {
+    public Entrada(int id, int idProducto, int cantidad, double precioUnitario, String proveedor, LocalDateTime fecha, String observaciones, String nombreProducto) {
         this.id = id;
         this.idProducto = idProducto;
         this.cantidad = cantidad;
@@ -23,6 +24,7 @@ public class Entrada {
         this.proveedor = proveedor;
         this.fecha = fecha;
         this.observaciones = observaciones;
+        this.nombreProducto = nombreProducto;
     }
 
     public int getId() {
@@ -79,6 +81,14 @@ public class Entrada {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
     }
 
 }

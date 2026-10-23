@@ -11,11 +11,12 @@ public class Salida {
     private String cliente;
     private LocalDateTime fecha;
     private String observaciones;
+    private String nombreProducto;
 
     public Salida() {
     }
 
-    public Salida(int id, int idProducto, int cantidad, double precioUnitario, String cliente, LocalDateTime fecha, String observaciones) {
+    public Salida(int id, int idProducto, int cantidad, double precioUnitario, String cliente, LocalDateTime fecha, String observaciones, String nombreProducto) {
         this.id = id;
         this.idProducto = idProducto;
         this.cantidad = cantidad;
@@ -23,6 +24,7 @@ public class Salida {
         this.cliente = cliente;
         this.fecha = fecha;
         this.observaciones = observaciones;
+        this.nombreProducto = nombreProducto;
     }
 
     public int getId() {
@@ -79,6 +81,14 @@ public class Salida {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
     }
 
 }
