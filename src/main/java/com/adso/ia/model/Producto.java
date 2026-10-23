@@ -10,11 +10,12 @@ public class Producto {
     private int stock;
     private int stockMinimo;
     private int idCategoria;
+    private boolean estado;
 
     public Producto() {
     }
 
-    public Producto(int id, String nombre, String descripcion, double precioCompra, double precioVenta, int stock, int stockMinimo, int idCategoria) {
+    public Producto(int id, String nombre, String descripcion, double precioCompra, double precioVenta, int stock, int stockMinimo, int idCategoria, boolean estado) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -23,6 +24,7 @@ public class Producto {
         this.stock = stock;
         this.stockMinimo = stockMinimo;
         this.idCategoria = idCategoria;
+        this.estado = estado;
     }
 
     public int getId() {
@@ -87,6 +89,14 @@ public class Producto {
 
     public void setIdCategoria(int idCategoria) {
         this.idCategoria = idCategoria;
+    }
+
+    public boolean isEstado() {
+        return estado;
+    }
+
+    public void setEstado(boolean estado) {
+        this.estado = estado;
     }
 
 }
