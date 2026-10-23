@@ -1,0 +1,32 @@
+﻿<%@ page pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%-- Fragmento compartido: topbar de todas las páginas.
+     Uso: antes de incluir, declara  pageContext.setAttribute("paginaActiva", "inicio"|"facturacion"|"consulta")
+     Si hay que cambiar la barra superior, se cambia SOLO AQUÍ. --%>
+<header class="topbar">
+    <div class="contenedor">
+        <a class="marca" href="<c:url value='/inicio' />">
+            <span class="marca__logo" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF"
+                     stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 7l9-4 9 4-9 4-9-4z"/>
+                    <path d="M3 12l9 4 9-4"/>
+                    <path d="M3 17l9 4 9-4"/>
+                </svg>
+            </span>
+            <span class="marca__texto">
+                <span class="marca__nombre">Saca Clavos</span>
+                <span class="marca__sub">Ferretería</span>
+            </span>
+        </a>
+
+        <nav class="nav" aria-label="Navegación principal">
+            <a class="nav__link<c:if test='${paginaActiva eq "inicio"}'> nav__link--activo</c:if>"
+               href="<c:url value='/inicio' />">Inicio</a>
+            <a class="nav__link<c:if test='${paginaActiva eq "facturacion"}'> nav__link--activo</c:if>"
+               href="<c:url value='/facturacion' />">Facturación</a>
+            <a class="nav__link<c:if test='${paginaActiva eq "consulta"}'> nav__link--activo</c:if>"
+               href="<c:url value='/consulta' />">Consulta IA</a>
+        </nav>
+    </div>
+</header>

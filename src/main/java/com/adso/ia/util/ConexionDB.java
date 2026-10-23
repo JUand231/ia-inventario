@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class ConexionDB {
 
-    // Autenticacion de Windows (SSPI): sin usuario ni clave, igual que Integrated Security en C#
+    // Autenticacion de Windows (SSPI)
     private static final String URL = "jdbc:sqlserver://localhost;portNumber=1433;databaseName=dbIaInventario;integratedSecurity=true;encrypt=false;trustServerCertificate=true;";
 
     static {
