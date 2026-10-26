@@ -24,7 +24,7 @@ public class ProductoDAO {
     }
 
     public Producto buscarPorId(int id) throws SQLException {
-        String consulta = "select * from productos p where p.id = ?";
+        String consulta = "select * from productos p where p.id = ? and p.estado = 1";
         try (Connection c = ConexionDB.getConexion(); PreparedStatement ps = c.prepareStatement(consulta)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -90,6 +90,20 @@ public class ProductoDAO {
             }
             return lista;
 
+        }
+    }
+
+    public boolean existeProducto(int id) throws SQLException {
+        String consulta = "Select COUNT(*) from productos where Id = ? and estado = 1";
+
+        try (Connection con = ConexionDB.getConexion(); PreparedStatement ps = con.prepareStatement(consulta)) {
+
+            ps.setInt(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                return rs.getInt(1) > 0;
+            }
         }
     }
 

@@ -23,6 +23,19 @@ public class CategoriaDAO {
         return lista;
 
     }
+    public boolean existeCategoria(int idCategoria) throws SQLException {
+        String consulta = "Select COUNT(*) from categorias where Id = ?";
+
+        try (Connection con = ConexionDB.getConexion(); PreparedStatement ps = con.prepareStatement(consulta)) {
+
+            ps.setInt(1, idCategoria);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                return rs.getInt(1) > 0;
+            }
+        }
+    }
 
     private Categoria map(ResultSet rs) throws SQLException {
         return new Categoria(
