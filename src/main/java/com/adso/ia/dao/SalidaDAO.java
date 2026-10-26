@@ -52,7 +52,8 @@ public class SalidaDAO {
                 rs.getString("cliente"),
                 rs.getTimestamp("fecha").toLocalDateTime(),
                 rs.getString("observaciones"),
-                rs.getString("nombreProducto")
+                rs.getString("nombreProducto"),
+                rs.getInt("Id_factura")
         );
     }
 }
