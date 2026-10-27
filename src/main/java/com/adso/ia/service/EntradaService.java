@@ -3,6 +3,8 @@ package com.adso.ia.service;
 import com.adso.ia.dao.EntradaDAO;
 import com.adso.ia.dao.ProductoDAO;
 import com.adso.ia.model.Entrada;
+import com.adso.ia.util.ConexionDB;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -40,6 +42,30 @@ public class EntradaService {
         if (e.getObservaciones() != null && e.getObservaciones().length() > 100) {
             throw new NegocioException("Las observaciones no deben superar los 100 caracteres.");
         }
-        return entrada.registrar(e);
+
+        try (Connection con = ConexionDB.getConexion()) {
+            con.setAutoCommit(false);
+
+            try {
+                if (!entrada.registrar(e, con)) {
+                    con.rollback();
+                    return false;
+                }
+                if (!producto.sumarStock(e.getIdProducto(), e.getCantidad(), con)) {
+                    con.rollback();
+                    return false;
+                }
+                con.commit();
+                return true;
+
+            } catch (SQLException ex) {
+                try {
+                    con.rollback();
+                } catch (SQLException errorRollback) {
+                    ex.addSuppressed(errorRollback);
+                }
+                throw ex;
+            }
+        }
     }
 }

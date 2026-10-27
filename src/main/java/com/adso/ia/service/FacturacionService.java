@@ -1,6 +1,12 @@
 package com.adso.ia.service;
 
 import com.adso.ia.dao.FacturacionDAO;
+import com.adso.ia.dao.ProductoDAO;
+import com.adso.ia.dao.SalidaDAO;
+import com.adso.ia.model.Salida;
+import com.adso.ia.util.ConexionDB;
+import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
@@ -8,6 +14,8 @@ import java.util.Locale;
 public class FacturacionService {
 
     private final FacturacionDAO facturacion = new FacturacionDAO();
+    private final ProductoDAO producto = new ProductoDAO();
+    private final SalidaDAO salidaDAO = new SalidaDAO();
 
     public List<String[]> buscar(String texto) throws SQLException {
         if (texto == null) {
@@ -55,6 +63,52 @@ public class FacturacionService {
             }
         }
 
-        return facturacion.cobrar(cliente, metodo, ids, cantidades);
+        String nombreCliente = (cliente == null) ? "Mostrador" : cliente;
+
+        try (Connection con = ConexionDB.getConexion()) {
+            con.setAutoCommit(false);
+
+            try {
+                int idFactura = facturacion.crearFactura(nombreCliente, metodo, con);
+                BigDecimal total = BigDecimal.ZERO;
+
+                for (int i = 0; i < ids.length; i++) {
+
+                    if (!producto.descontarStock(ids[i], cantidades[i], con)) {
+                        throw new SQLException("Stock insuficiente o producto inactivo (Id " + ids[i] + ").");
+                    }
+
+                    BigDecimal precio = producto.precioDeVenta(ids[i], con);
+                    if (precio == null) {
+                        throw new SQLException("No se encontró el producto con ID " + ids[i] + ".");
+                    }
+
+                    total = total.add(precio.multiply(BigDecimal.valueOf(cantidades[i])));
+
+                    Salida salida = new Salida();
+                    salida.setIdProducto(ids[i]);
+                    salida.setCantidad(cantidades[i]);
+                    salida.setPrecioUnitario(precio.doubleValue());
+                    salida.setCliente(nombreCliente);
+                    salida.setObservaciones("Venta factura #" + idFactura);
+                    salida.setIdFactura(idFactura);
+                    salidaDAO.registrar(salida, con);
+                }
+
+                if (!facturacion.actualizarTotal(idFactura, total, con)) {
+                    throw new SQLException("No se pudo actualizar el total de la factura.");
+                }
+                con.commit();
+                return idFactura;
+
+            } catch (SQLException ex) {
+                try {
+                    con.rollback();
+                } catch (SQLException errorRollback) {
+                    ex.addSuppressed(errorRollback);
+                }
+                throw ex;
+            }
+        }
     }
 }

@@ -13,12 +13,7 @@ public class SalidaDAO {
 
     public List<Salida> listar() throws SQLException {
 
-        String consulta = "SELECT s.Id, s.Id_producto, s.Id_factura, "
-                + "s.cantidad, s.precio_unitario, s.cliente, s.fecha, "
-                + "s.observaciones, p.nombre AS nombreProducto "
-                + "FROM salidas s "
-                + "INNER JOIN productos p ON p.Id = s.Id_producto "
-                + "ORDER BY s.fecha DESC";
+        String consulta = "Select s.Id, s.Id_producto, s.Id_factura, s.cantidad, s.precio_unitario, s.cliente, s.fecha, s.observaciones, p.nombre AS nombreProducto from salidas s join productos p ON p.Id = s.Id_producto Order by s.fecha desc";
 
         List<Salida> lista = new ArrayList<>();
 
@@ -43,5 +38,21 @@ public class SalidaDAO {
         }
 
         return lista;
+    }
+
+    public boolean registrar(Salida s, Connection c) throws SQLException {
+        String consulta = "Insert into salidas (Id_producto, cantidad, precio_unitario, cliente, fecha, observaciones, Id_factura) values (?, ?, ?, ?, GETDATE(), ?, ?)";
+
+        try (PreparedStatement ps = c.prepareStatement(consulta)) {
+
+            ps.setInt(1, s.getIdProducto());
+            ps.setInt(2, s.getCantidad());
+            ps.setDouble(3, s.getPrecioUnitario());
+            ps.setString(4, s.getCliente());
+            ps.setString(5, s.getObservaciones());
+            ps.setInt(6, s.getIdFactura());
+
+            return ps.executeUpdate() > 0;
+        }
     }
 }

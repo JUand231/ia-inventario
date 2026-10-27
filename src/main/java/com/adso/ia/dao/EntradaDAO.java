@@ -27,51 +27,19 @@ public class EntradaDAO {
         return lista;
     }
 
-    public boolean registrar(Entrada e) throws SQLException {
-        String insertar = "Insert into entradas (Id_producto, cantidad, precio_unitario, proveedor, fecha, observaciones) Select p.Id, ?, ?, ?, ?, ? from productos p WHERE p.Id = ? AND p.estado = 1";
+    public boolean registrar(Entrada e, Connection c) throws SQLException {
+        String insertar = "Insert into entradas (Id_producto, cantidad, precio_unitario, proveedor, fecha, observaciones) values (?, ?, ?, ?, ?, ?)";
 
-        String actualizarStock = "Update productos set stock = stock + ? where Id = ? and estado = 1";
+        try (PreparedStatement ps = c.prepareStatement(insertar)) {
 
-        try (Connection c = ConexionDB.getConexion()) {
-            c.setAutoCommit(false);
+            ps.setInt(1, e.getIdProducto());
+            ps.setInt(2, e.getCantidad());
+            ps.setDouble(3, e.getPrecioUnitario());
+            ps.setString(4, e.getProveedor());
+            ps.setTimestamp(5, Timestamp.valueOf(e.getFecha()));
+            ps.setString(6, e.getObservaciones());
 
-            try {
-                try (PreparedStatement ps = c.prepareStatement(insertar)) {
-                    ps.setInt(1, e.getCantidad());
-                    ps.setDouble(2, e.getPrecioUnitario());
-                    ps.setString(3, e.getProveedor());
-                    ps.setTimestamp(4, Timestamp.valueOf(e.getFecha()));
-                    ps.setString(5, e.getObservaciones());
-                    ps.setInt(6, e.getIdProducto());
-
-                    if (ps.executeUpdate() == 0) {
-                        c.rollback();
-                        return false;
-                    }
-                }
-
-                try (PreparedStatement ps = c.prepareStatement(actualizarStock)) {
-                    ps.setInt(1, e.getCantidad());
-                    ps.setInt(2, e.getIdProducto());
-
-                    if (ps.executeUpdate() == 0) {
-                        c.rollback();
-                        return false;
-                    }
-                }
-
-                c.commit();
-                return true;
-
-            } catch (SQLException | RuntimeException ex) {
-                try {
-                    c.rollback();
-                } catch (SQLException errorRollback) {
-                    ex.addSuppressed(errorRollback);
-                }
-
-                throw ex;
-            }
+            return ps.executeUpdate() > 0;
         }
     }
 
