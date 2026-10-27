@@ -4,10 +4,11 @@
    
    Contenido:
      1. Base de datos dbIaInventario (solo se crea si NO existe)
-     2. Tablas: categorias, productos, entradas, facturas, salidas
-     3. Claves foráneas
-     4. Vista vw_detalle_factura
-     5. Datos de ejemplo: 5 categorías, 15 productos, 8 entradas, 10 salidas
+     2. Usuario ia_app de SQL Server (lo que usa la aplicación para conectar)
+     3. Tablas: categorias, productos, entradas, facturas, salidas
+     4. Claves foráneas
+     5. Vista vw_detalle_factura
+     6. Datos de ejemplo: 5 categorías, 15 productos, 8 entradas, 10 salidas
 
    Cómo correrlo: abrir SQL Server Management Studio (o SSMS),
    conectar con autenticación de Windows y ejecutar este archivo completo.
@@ -28,7 +29,23 @@ GO
 CREATE DATABASE dbIaInventario;
 GO
 
+/* ====================== USUARIO DE LA APLICACIÓN ======================== */
+-- Login a nivel de servidor (se crea en el contexto de master)
+USE master;
+GO
+-- CHECK_POLICY = OFF porque la clave '12345' no pasaría la política de
+-- contraseñas de Windows. Es un usuario LOCAL, solo para este proyecto.
+IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'ia_app')
+    CREATE LOGIN ia_app WITH PASSWORD = '12345', CHECK_POLICY = OFF;
+GO
+
+-- Usuario dentro de la base de datos con permisos sobre las tablas
 USE dbIaInventario;
+GO
+IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = 'ia_app')
+    CREATE USER ia_app FOR LOGIN ia_app;
+GO
+GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::dbo TO ia_app;
 GO
 
 /* ============================== TABLAS ================================== */

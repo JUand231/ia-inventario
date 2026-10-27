@@ -39,7 +39,3 @@ logs/
 secrets.*
 *credential*
 config.properties
-
-# ============ IMPORTANTE: esto NO se ignora ============
-# native/mssql-jdbc_auth....dll  → SÍ se sube (310 KB, tu compañera lo
-# recibe del repo sin descargar nada aparte)

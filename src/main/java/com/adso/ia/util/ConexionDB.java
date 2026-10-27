@@ -6,8 +6,9 @@ import java.sql.SQLException;
 
 public class ConexionDB {
 
-    // Autenticacion de Windows (SSPI)
-    private static final String URL = "jdbc:sqlserver://localhost;portNumber=1433;databaseName=dbIaInventario;integratedSecurity=true;encrypt=false;trustServerCertificate=true;";
+    private static final String URL = "jdbc:sqlserver://localhost;portNumber=1433;databaseName=dbIaInventario;encrypt=false;trustServerCertificate=true;";
+    private static final String USUARIO = "ia_app";
+    private static final String CLAVE = "12345";
 
     static {
         try {
@@ -18,6 +19,6 @@ public class ConexionDB {
     }
 
     public static Connection getConexion() throws SQLException {
-        return DriverManager.getConnection(URL);
+        return DriverManager.getConnection(URL, USUARIO, CLAVE);
     }
 }

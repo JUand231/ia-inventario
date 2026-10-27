@@ -53,6 +53,9 @@ public class ProductoService {
         if (!categoria.existeCategoria(p.getIdCategoria())) {
             throw new NegocioException("La categoria seleccionada no existe.");
         }
+        if (p.getUbicacion() != null && p.getUbicacion().length() > 80) {
+            throw new NegocioException("La ubicación no debe superar los 80 caracteres.");
+        }
         return producto.insertarProducto(p);
     }
 
@@ -92,6 +95,9 @@ public class ProductoService {
         }
         if (!categoria.existeCategoria(p.getIdCategoria())) {
             throw new NegocioException("La categoría seleccionada no existe.");
+        }
+        if (p.getUbicacion() != null && p.getUbicacion().length() > 80) {
+            throw new NegocioException("La ubicación no debe superar los 80 caracteres.");
         }
         return producto.actualizarProducto(p);
     }

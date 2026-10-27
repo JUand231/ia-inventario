@@ -37,7 +37,7 @@ public class ProductoDAO {
     }
 
     public boolean insertarProducto(Producto p) throws SQLException {
-        String consulta = "Insert into productos(nombre, descripcion, precio_compra, precio_venta, stock, stock_minimo, Id_categoria) values (?, ?, ?, ?, ?, ?, ?)";
+        String consulta = "Insert into productos(nombre, descripcion, precio_compra, precio_venta, stock, stock_minimo, Id_categoria, ubicacion) values (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection c = ConexionDB.getConexion(); PreparedStatement ps = c.prepareStatement(consulta)) {
 
             ps.setString(1, p.getNombre());
@@ -47,6 +47,7 @@ public class ProductoDAO {
             ps.setInt(5, p.getStock());
             ps.setInt(6, p.getStockMinimo());
             ps.setInt(7, p.getIdCategoria());
+            ps.setString(8, p.getUbicacion());
 
             return ps.executeUpdate() > 0;
 
@@ -54,7 +55,7 @@ public class ProductoDAO {
     }
 
     public boolean actualizarProducto(Producto p) throws SQLException {
-        String consulta = "Update productos set nombre = ?, descripcion = ?, precio_compra = ?, precio_venta = ?, stock = ?, stock_minimo = ?, Id_categoria = ? where Id = ? and estado = 1";
+        String consulta = "Update productos set nombre = ?, descripcion = ?, precio_compra = ?, precio_venta = ?, stock = ?, stock_minimo = ?, Id_categoria = ?, ubicacion = ? where Id = ? and estado = 1";
         try (Connection c = ConexionDB.getConexion(); PreparedStatement ps = c.prepareStatement(consulta)) {
 
             ps.setString(1, p.getNombre());
@@ -64,7 +65,8 @@ public class ProductoDAO {
             ps.setInt(5, p.getStock());
             ps.setInt(6, p.getStockMinimo());
             ps.setInt(7, p.getIdCategoria());
-            ps.setInt(8, p.getId());
+            ps.setString(8, p.getUbicacion());
+            ps.setInt(9, p.getId());
 
             return ps.executeUpdate() > 0;
         }
@@ -117,7 +119,8 @@ public class ProductoDAO {
                 rs.getInt("stock"),
                 rs.getInt("stock_minimo"),
                 rs.getInt("Id_categoria"),
-                rs.getBoolean("estado")
+                rs.getBoolean("estado"),
+                rs.getString("ubicacion")
         );
     }
 }
