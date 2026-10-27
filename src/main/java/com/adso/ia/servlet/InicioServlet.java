@@ -1,4 +1,4 @@
-package com.adso.ia.web;
+package com.adso.ia.servlet;
 
 import com.adso.ia.dao.DashboardDAO;
 import com.adso.ia.model.ResumenPanel;

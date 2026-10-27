@@ -1,4 +1,4 @@
-package com.adso.ia.web;
+package com.adso.ia.servlet;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
