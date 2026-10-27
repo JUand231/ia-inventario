@@ -1,0 +1,25 @@
+# ============================================================
+#  PLANTILLA DE CONFIGURACION DEL ASISTENTE IA (Groq)
+#
+#  PASOS PARA TU COMPAÑERO:
+#   1. Copia este archivo y renombralo a: config.properties
+#      (en la misma carpeta: src/main/resources/)
+#   2. Pega su propia clave de Groq en  groq.api.key=
+#      Consiguela en: https://console.groq.com/keys
+#      (cada quien usa SU clave: esta en el .gitignore,
+#       por eso este .example va vacio y se sube al repo)
+#   3. Compilar con F11 y entrar al chat de la IA.
+#
+#  ARCHIVOS:
+#   - config.properties          -> CLAVE REAL, nunca se sube (.gitignore)
+#   - config.properties.example  -> plantilla vacia, SI se sube
+#
+#  RESPALDO: si config.properties no existe o groq.api.key esta
+#  vacio, el programa usa la variable de entorno GROQ_API_KEY.
+# ============================================================
+
+# Clave de API de Groq (empieza con gsk_)
+groq.api.key=
+
+# Modelo a usar (opcional). Ej: llama-3.3-70b-versatile
+groq.model=llama-3.3-70b-versatile

@@ -30,13 +30,15 @@ desktop.ini
 *.log
 logs/
 
-# ============ SECRETOS (futuro: API key de Groq, etc.) ============
-# Cuando agreguemos la API key, que viva en un archivo NO trackeado
+# ============ SECRETOS (API key de Groq, etc.) ============
+# La clave vive en src/main/resources/config.properties (NO trackeado).
+# La plantilla vacía config.properties.example SÍ se sube.
 .env
 .env*
 *api-key*
 secrets.*
 *credential*
+config.properties
 
 # ============ IMPORTANTE: esto NO se ignora ============
 # native/mssql-jdbc_auth....dll  → SÍ se sube (310 KB, tu compañera lo
