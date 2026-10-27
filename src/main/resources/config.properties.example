@@ -21,5 +21,7 @@
 # Clave de API de Groq (empieza con gsk_)
 groq.api.key=
 
-# Modelo a usar (opcional). Ej: llama-3.3-70b-versatile
-groq.model=llama-3.3-70b-versatile
+# Modelo a usar (opcional). Ojo: llama-3.3-70b-versatile ya NO existe en
+# Groq (devuelve 404). Modelos validos hoy: openai/gpt-oss-120b,
+# openai/gpt-oss-20b, qwen/qwen3.8-27b
+groq.model=openai/gpt-oss-120b

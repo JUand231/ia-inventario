@@ -1,0 +1,184 @@
+<%@ page pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%-- ====================================================================
+     WIDGET DEL ASISTENTE IA (estilo Messenger) — común a todas las páginas.
+     Incluir ANTES de </body>, junto con assets/css/widget-ia.css en el <head>:
+       <link rel="stylesheet" href="<c:url value='/assets/css/widget-ia.css' />">
+       ...
+       <%@ include file="componentes/widget-ia.jspf" %>
+
+     1. ia-fab     -> burbuja circular flotante (esquina inferior derecha)
+     2. ia-ventana -> ventana de chat estilo Messenger (abre/cierra la burbuja)
+     ==================================================================== --%>
+<button type="button" class="ia-fab" id="iaBurbuja"
+        aria-expanded="false" aria-controls="iaVentana"
+        aria-label="Abrir el asistente SacaClavos">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="4" y="8.5" width="16" height="11.5" rx="4"/>
+        <path d="M12 8.5V5.5"/>
+        <circle cx="12" cy="3.6" r="1.6"/>
+        <circle cx="9.2" cy="13.6" r="1.15" fill="currentColor" stroke="none"/>
+        <circle cx="14.8" cy="13.6" r="1.15" fill="currentColor" stroke="none"/>
+        <path d="M9.6 17.2h4.8"/>
+    </svg>
+    <span class="ia-fab__punto" aria-hidden="true"></span>
+</button>
+
+<section class="ia-ventana" id="iaVentana" role="dialog"
+         aria-label="Asistente SacaClavos" aria-hidden="true">
+
+    <header class="ia-ventana__barra">
+        <div class="ia-ventana__identidad">
+            <span class="ia-ventana__avatar" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="8.5" width="16" height="11.5" rx="4"/>
+                    <path d="M12 8.5V5.5"/>
+                    <circle cx="12" cy="3.6" r="1.6"/>
+                    <circle cx="9.2" cy="13.6" r="1.15" fill="currentColor" stroke="none"/>
+                    <circle cx="14.8" cy="13.6" r="1.15" fill="currentColor" stroke="none"/>
+                    <path d="M9.6 17.2h4.8"/>
+                </svg>
+            </span>
+            <span class="ia-ventana__nombres">
+                <strong class="ia-ventana__nombre">SacaClavos</strong>
+                <small class="ia-ventana__estado">Asistente en línea</small>
+            </span>
+        </div>
+
+        <div class="ia-ventana__acciones">
+            <button type="button" class="ia-ventana__btn" id="iaMinimizar"
+                    aria-label="Minimizar el chat">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/></svg>
+            </button>
+            <button type="button" class="ia-ventana__btn" id="iaCerrar"
+                    aria-label="Cerrar el chat">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <div class="ia-ventana__cuerpo" id="mensajes">
+        <div class="chat-burbuja chat-burbuja--ia">Hola. Pregúntame por productos, stock, ubicaciones o ventas de la ferretería.</div>
+    </div>
+
+    <div class="ia-ventana__sugerencias">
+        <button type="button" class="chat-chip">¿Dónde están los clavos?</button>
+        <button type="button" class="chat-chip">¿Cuánto cemento queda?</button>
+        <button type="button" class="chat-chip">¿Cómo van las ventas de hoy?</button>
+        <button type="button" class="chat-chip">¿Qué productos tienen stock bajo?</button>
+        <button type="button" class="chat-chip">¿Qué se ha vendido más este mes?</button>
+    </div>
+
+    <form class="ia-ventana__pie" id="formChat">
+        <input id="pregunta" type="text" maxlength="500" placeholder="Escribe tu pregunta..." autocomplete="off">
+        <button type="submit" class="ia-ventana__enviar" id="enviar" aria-label="Enviar mensaje">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 3L10.8 13.2"/><path d="M21 3l-6.4 18-3.8-7.8L3 9.4 21 3z"/>
+            </svg>
+        </button>
+    </form>
+</section>
+
+<script>
+    /* IIFE: aísla el widget para que sus funciones (agregar, enviar...)
+       no colisionen con los scripts de cada página (p. ej. el carrito
+       de facturacion.jsp también define "agregar"). */
+    (function () {
+        var URL_CONSULTA = '<c:url value="/consulta" />';
+
+    /* ---- Apertura / cierre del widget ---- */
+    var burbuja = document.getElementById('iaBurbuja');
+    var ventana = document.getElementById('iaVentana');
+    var btnCerrar = document.getElementById('iaCerrar');
+    var btnMinimizar = document.getElementById('iaMinimizar');
+    var cont = document.getElementById('mensajes');
+    var input = document.getElementById('pregunta');
+    var boton = document.getElementById('enviar');
+
+    function abrirVentana() {
+        ventana.setAttribute('data-abierto', 'true');
+        ventana.setAttribute('aria-hidden', 'false');
+        burbuja.setAttribute('aria-expanded', 'true');
+        input.focus();
+    }
+
+    function cerrarVentana() {
+        ventana.setAttribute('data-abierto', 'false');
+        ventana.setAttribute('aria-hidden', 'true');
+        burbuja.setAttribute('aria-expanded', 'false');
+        burbuja.focus();
+    }
+
+    burbuja.addEventListener('click', abrirVentana);
+    btnCerrar.addEventListener('click', cerrarVentana);
+    btnMinimizar.addEventListener('click', cerrarVentana);
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && ventana.getAttribute('data-abierto') === 'true') {
+            cerrarVentana();
+        }
+    });
+
+    /* ---- Mensajes ---- */
+    function escapar(t) {
+        return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function formato(t) {
+        return escapar(t).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    }
+    function agregar(clases, html) {
+        var d = document.createElement('div');
+        d.className = 'chat-burbuja ' + clases;
+        d.innerHTML = html;
+        cont.appendChild(d);
+        cont.scrollTop = cont.scrollHeight;
+        return d;
+    }
+
+    function enviar(texto) {
+        texto = texto.trim();
+        if (!texto)
+            return;
+        agregar('chat-burbuja--yo', escapar(texto));
+        var espera = agregar('chat-burbuja--ia chat-burbuja--espera', 'Consultando el inventario...');
+        boton.disabled = true;
+        input.value = '';
+
+        fetch(URL_CONSULTA, {method: 'POST', body: new URLSearchParams({pregunta: texto})})
+                .then(function (r) {
+                    return r.json();
+                })
+                .then(function (m) {
+                    espera.remove();
+                    if (m.tipo === 'exito') {
+                        agregar('chat-burbuja--ia', formato(m.respuesta.texto)
+                                + '<small class="chat-meta">' + m.respuesta.tokensTotal + ' tokens</small>');
+                    } else {
+                        agregar('chat-burbuja--error', escapar(m.error));
+                    }
+                })
+                .catch(function () {
+                    espera.remove();
+                    agregar('chat-burbuja--error', 'No se pudo conectar con el servidor.');
+                })
+                .then(function () {
+                    boton.disabled = false;
+                    input.focus();
+                });
+    }
+
+    document.getElementById('formChat').addEventListener('submit', function (e) {
+        e.preventDefault();
+        enviar(input.value);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.chat-chip'), function (b) {
+        b.addEventListener('click', function () {
+            enviar(b.textContent);
+        });
+    });
+    })();
+</script>

@@ -21,7 +21,7 @@ public class AsistenteService {
     private static final String URL_API = "https://api.groq.com/openai/v1/chat/completions";
     /** Archivo de configuración: src/main/resources/config.properties (no va al repositorio). */
     private static final String ARCHIVO_CONFIG = "/config.properties";
-    private static final String MODELO_POR_DEFECTO = "llama-3.3-70b-versatile";
+    private static final String MODELO_POR_DEFECTO = "openai/gpt-oss-120b";
     private static final int MAX_VUELTAS = 4;
 
     private static final String SISTEMA
