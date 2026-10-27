@@ -8,13 +8,13 @@
 - Java (release 17) · Tomcat 9 con paquetes **javax.*** (NUNCA jakarta.*) · Maven embebido
 - SQL Server con autenticación de Windows: **sin usuarios ni contraseñas en el código**
 - Vistas JSP con JSTL. Librerías por CDN: Bootstrap 5.3, Bootstrap Icons, SweetAlert2, Chart.js
-- Patrón: MVC en capas `controller → service → dao → model`
+- Patrón: MVC en capas `servlet → service → dao → model`
 
 ## Arquitectura por capas
 
 | Capa | Paquete | Qué hace | Qué NUNCA hace |
 |---|---|---|---|
-| Controller | `com.adso.ia.controller` | Servlets: recibe parámetros, llama al service, hace `forward` al JSP | SQL, HTML, lógica |
+| Servlet | `com.adso.ia.servlet` | Recibe parámetros, llama al service, hace `forward` al JSP | SQL, HTML, lógica |
 | Service | `com.adso.ia.service` | Validaciones (`NegocioException`) y **transacciones** (abre conexión, `commit`/`rollback`) | HTML ni SQL armado |
 | DAO | `com.adso.ia.dao` | SQL puro con `PreparedStatement`. Si participa en una transacción del service, **recibe la `Connection`** | Commit/rollback propio, validaciones de negocio |
 | Model | `com.adso.ia.model` | POJOs (un objeto por tabla), sin lógica | Nada que no sea getters/setters/constructores |
@@ -39,7 +39,7 @@
 
 ## Checklist de revisión (2 minutos, antes de aceptar cambios de la pareja)
 1. ¿Respeta las capas (sin saltos)?
-2. ¿Paquetes correctos (`controller`/`service`/`dao`/`model`)?
+2. ¿Paquetes correctos (`servlet`/`service`/`dao`/`model`)?
 3. ¿SQL con `PreparedStatement` y `?` = sets?
 4. ¿Compila?
 5. ¿Sin archivos muertos ni temporales?
