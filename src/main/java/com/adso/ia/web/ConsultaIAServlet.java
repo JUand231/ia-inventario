@@ -10,8 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Módulo 2 (Asistente IA): GET muestra el chat, POST responde una pregunta en
- * JSON.
+ * Endpoint del asistente IA: POST responde una pregunta en JSON (lo usa el
+ * widget flotante presente en todas las páginas). GET redirige al inicio,
+ * porque la antigua página de consulta fue retirada.
  */
 @WebServlet(name = "ConsultaIAServlet", urlPatterns = {"/consulta"})
 public class ConsultaIAServlet extends HttpServlet {
@@ -23,7 +24,8 @@ public class ConsultaIAServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/vistas/consulta.jsp").forward(request, response);
+        // La página /consulta ya no existe: el asistente vive en el widget flotante.
+        response.sendRedirect(request.getContextPath() + "/inicio");
     }
 
     @Override

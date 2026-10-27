@@ -2,6 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setLocale value="es_CO" />
+<%
+    // Evita que el navegador muestre versiones guardadas de esta página
+    response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+%>
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -10,6 +16,11 @@
         <meta name="theme-color" content="#0A2E58">
         <title>Saca Clavos · Panel de control</title>
         <link rel="stylesheet" href="<c:url value='/assets/css/inventario.css' />">
+        <link rel="stylesheet" href="<c:url value='/assets/css/widget-ia.css' />">
+        <%-- Fuente elegante para la marca "SacaClavos" (con respaldo serif si no hay internet) --%>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     </head>
     <body>
 
@@ -42,7 +53,7 @@
                 </div>
             </section>
 
-            <!-- ============ Los DOS módulos del sistema ============ -->
+            <!-- ============ Módulo del sistema ============ -->
             <section class="modulos" aria-label="Módulos">
 
                 <a class="modulo modulo--cobro" href="<c:url value='/facturacion' />">
@@ -72,38 +83,6 @@
                     </ul>
                     <span class="modulo__accion">
                         Abrir caja
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 12h14M13 6l6 6-6 6"/>
-                        </svg>
-                    </span>
-                </a>
-
-                <a class="modulo modulo--ia" href="<c:url value='/consulta' />">
-                    <div class="modulo__superior">
-                        <span class="modulo__icono" aria-hidden="true">
-                            <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 12a8 8 0 0 1-8 8H7.5L3.5 22l1.2-4.3A8 8 0 1 1 21 12z"/>
-                                <path d="M12 8.2l1.1 2.6 2.6 1.1-2.6 1.1L12 15.6l-1.1-2.6-2.6-1.1 2.6-1.1L12 8.2z"/>
-                            </svg>
-                        </span>
-                        <div>
-                            <p class="modulo__etiqueta">Módulo 2 · Asistente</p>
-                            <h2 class="modulo__titulo">Consulta con IA</h2>
-                        </div>
-                    </div>
-                    <p class="modulo__desc">
-                        Pregunta en lenguaje natural dónde está cada producto, cuánto stock hay
-                        y cómo van las ventas del día, la semana y el mes.
-                    </p>
-                    <ul class="modulo__lista">
-                        <li>Ubicación de productos</li>
-                        <li>Cantidades y stock</li>
-                        <li>Ventas día · semana · mes</li>
-                    </ul>
-                    <span class="modulo__accion">
-                        Preguntar a la IA
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M5 12h14M13 6l6 6-6 6"/>
@@ -189,6 +168,9 @@
         <footer class="pie">
             <p><strong>Saca Clavos</strong> · Sistema de inventario, facturación y asistente con inteligencia artificial</p>
         </footer>
+
+        <%-- Widget flotante del asistente IA (burbuja + ventana de chat) --%>
+        <%@ include file="componentes/widget-ia.jspf" %>
 
     </body>
 </html>
