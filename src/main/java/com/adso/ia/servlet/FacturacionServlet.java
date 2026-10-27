@@ -1,5 +1,6 @@
 package com.adso.ia.servlet;
 
+import com.adso.ia.model.Producto;
 import com.adso.ia.service.FacturacionService;
 import com.adso.ia.service.NegocioException;
 import java.io.IOException;
@@ -32,22 +33,22 @@ public class FacturacionServlet extends HttpServlet {
             response.setContentType("application/json;charset=UTF-8");
 
             try {
-                List<String[]> resultados = servicio.buscar(q);
+                List<Producto> resultados = servicio.buscar(q);
                 JSONArray json = new JSONArray();
 
-                for (String[] p : resultados) {
+                for (Producto p : resultados) {
                     JSONObject producto = new JSONObject();
-                    producto.put("id", Integer.parseInt(p[0]));
-                    producto.put("nombre", p[1]);
-                    producto.put("precio", Double.parseDouble(p[2]));
-                    producto.put("stock", Integer.parseInt(p[3]));
+                    producto.put("id", p.getId());
+                    producto.put("nombre", p.getNombre());
+                    producto.put("precio", p.getPrecioVenta());
+                    producto.put("stock", p.getStock());
 
                     json.put(producto);
                 }
 
                 response.getWriter().write(json.toString());
 
-            } catch (SQLException | NumberFormatException e) {
+            } catch (SQLException e) {
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 response.getWriter().write("[]");
             }

@@ -1,5 +1,6 @@
 package com.adso.ia.dao;
 
+import com.adso.ia.model.Producto;
 import com.adso.ia.util.ConexionDB;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -8,20 +9,19 @@ import java.util.List;
 
 public class FacturacionDAO {
 
-    public List<String[]> buscar(String texto) throws SQLException {
+    public List<Producto> buscar(String texto) throws SQLException {
         String sql = "Select top 10 Id, nombre, precio_venta, stock from productos where nombre like ? and stock > 0 and estado = 1 order by nombre";
-
-        List<String[]> lista = new ArrayList<>();
-
+        List<Producto> lista = new ArrayList<>();
         try (Connection con = ConexionDB.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, "%" + texto + "%");
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    lista.add(new String[]{
-                        rs.getString("Id"),
-                        rs.getString("nombre"),
-                        rs.getBigDecimal("precio_venta").toPlainString(),
-                        rs.getString("stock")});
+                    Producto p = new Producto();
+                    p.setId(rs.getInt("Id"));
+                    p.setNombre(rs.getString("nombre"));
+                    p.setPrecioVenta(rs.getDouble("precio_venta"));
+                    p.setStock(rs.getInt("stock"));
+                    lista.add(p);
                 }
             }
         }

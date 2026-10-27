@@ -3,6 +3,7 @@ package com.adso.ia.service;
 import com.adso.ia.dao.FacturacionDAO;
 import com.adso.ia.dao.ProductoDAO;
 import com.adso.ia.dao.SalidaDAO;
+import com.adso.ia.model.Producto;
 import com.adso.ia.model.Salida;
 import com.adso.ia.util.ConexionDB;
 import java.math.BigDecimal;
@@ -17,7 +18,7 @@ public class FacturacionService {
     private final ProductoDAO producto = new ProductoDAO();
     private final SalidaDAO salidaDAO = new SalidaDAO();
 
-    public List<String[]> buscar(String texto) throws SQLException {
+    public List<Producto> buscar(String texto) throws SQLException {
         if (texto == null) {
             texto = "";
         }
