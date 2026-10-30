@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
  * widget flotante presente en todas las páginas). GET redirige al inicio,
  * porque la antigua página de consulta fue retirada.
  */
-@WebServlet(name = "ConsultaIAServlet", urlPatterns = {"/consulta"})
+@WebServlet("/consulta")
 public class ConsultaIAServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;

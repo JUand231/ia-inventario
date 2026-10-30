@@ -46,12 +46,14 @@
 
 ## URLs de servlets
 
+Anotación siempre en forma corta: `@WebServlet("/ruta")` (sin `name` ni `urlPatterns`).
+
 | URL | Módulo |
 |---|---|
 | `/inicio` | Dashboard (KPIs) |
 | `/facturacion` | Facturación |
 | `/consulta` | Chat IA |
-| `/productos` | Productos CRUD *(pendiente)* |
+| `/productos` | Productos CRUD ✅ |
 | `/entradas` | Entradas *(pendiente)* |
 | `/salidas` | Salidas manuales *(pendiente)* |
 | `/alertas` | Alertas de stock bajo *(pendiente)* |

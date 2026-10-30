@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * Responsabilidad unica: pedir los datos, ponerlos en el request y reenviar
  * a la vista. Nada de HTML aqui: el HTML vive en WEB-INF/vistas/index.jsp.
  */
-@WebServlet(name = "InicioServlet", urlPatterns = {"/inicio"})
+@WebServlet("/inicio")
 public class InicioServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
