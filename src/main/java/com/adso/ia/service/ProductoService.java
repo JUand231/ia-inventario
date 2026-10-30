@@ -2,6 +2,7 @@ package com.adso.ia.service;
 
 import com.adso.ia.dao.CategoriaDAO;
 import com.adso.ia.dao.ProductoDAO;
+import com.adso.ia.model.Categoria;
 import com.adso.ia.model.Producto;
 import java.sql.SQLException;
 import java.util.List;
@@ -13,6 +14,10 @@ public class ProductoService {
 
     public List<Producto> listarProductos() throws SQLException {
         return producto.listarProductos();
+    }
+
+    public List<Categoria> listarCategorias() throws SQLException {
+        return categoria.listarCategorias();
     }
 
     public Producto buscarPorId(int id) throws SQLException, NegocioException {
