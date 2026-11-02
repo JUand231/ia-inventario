@@ -2,6 +2,7 @@ package com.adso.ia.servlet;
 
 import com.adso.ia.dao.DashboardDAO;
 import com.adso.ia.model.ResumenPanel;
+import com.adso.ia.service.ProductoService;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -29,6 +30,8 @@ public class InicioServlet extends HttpServlet {
     private static final DateTimeFormatter FECHA_LARGA =
             DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM 'de' yyyy", Locale.forLanguageTag("es-CO"));
 
+    private final ProductoService producto = new ProductoService();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -36,6 +39,7 @@ public class InicioServlet extends HttpServlet {
         try {
             ResumenPanel resumen = new DashboardDAO().obtenerResumen();
             request.setAttribute("resumen", resumen);
+            request.setAttribute("alertas", producto.listarStockBajo().size());
         } catch (SQLException e) {
             // La pagina NO se rompe si la BD esta caida: se avisa y listo.
             log("No se pudo cargar el resumen del panel", e);
