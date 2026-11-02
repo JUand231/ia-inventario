@@ -1,9 +1,8 @@
-﻿<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" session="false" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" session="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setLocale value="es_CO" />
 <%
-    // Evita que el navegador muestre versiones guardadas de esta página
     response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
     response.setHeader("Pragma", "no-cache");
     response.setDateHeader("Expires", 0);
@@ -17,159 +16,236 @@
         <title>Saca Clavos · Panel de control</title>
         <link rel="stylesheet" href="<c:url value='/assets/css/inventario.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/widget-ia.css' />">
-        <%-- Fuente elegante para la marca "SacaClavos" (con respaldo serif si no hay internet) --%>
+        <link rel="stylesheet" href="<c:url value='/assets/css/dashboard.css' />">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     </head>
-    <body>
+    <body class="dx-body">
 
-        <% pageContext.setAttribute("paginaActiva", "inicio"); %>
+        <% pageContext.setAttribute("paginaActiva", "inicio");%>
         <%@ include file="componentes/topbar.jspf" %>
 
-        <main class="contenedor">
+        <main class="dx-contenedor">
 
-            <section class="encabezado">
-                <div class="encabezado__fila">
-                    <div>
-                        <h1 class="encabezado__titulo">Panel de control</h1>
-                        <span class="encabezado__fecha"><c:out value="${fechaHoy}" /></span>
-                    </div>
-
-                    <c:choose>
-                        <c:when test="${not empty errorBD}">
-                            <span class="chip" style="color:#A9660A;border-color:#F6DFB4;background:#FEF6E7;">
-                                <span class="chip__punto" style="background:#F59E0B;box-shadow:0 0 0 3px rgba(245,158,11,.2);"></span>
-                                Sin conexión a la base de datos
-                            </span>
-                        </c:when>
-                        <c:otherwise>
-                            <span class="chip">
-                                <span class="chip__punto"></span>
-                                Inventario sincronizado
-                            </span>
-                        </c:otherwise>
-                    </c:choose>
+            <!-- ===== Encabezado ===== -->
+            <header class="dx-head">
+                <div>
+                    <p class="dx-head__fecha"><c:out value="${fechaHoy}" /></p>
+                    <h1 class="dx-head__titulo">Panel de control</h1>
+                    <p class="dx-head__sub">Resumen en tiempo real de operaciones, caja, facturación y niveles de stock.</p>
                 </div>
-            </section>
+                <c:choose>
+                    <c:when test="${not empty errorBD}">
+                        <span class="dx-chip dx-chip--warn"><span class="dx-chip__punto"></span>Sin conexión a la base de datos</span>
+                    </c:when>
+                    <c:otherwise>
+                        <span class="dx-chip"><span class="dx-chip__punto"></span>Inventario sincronizado</span>
+                    </c:otherwise>
+                </c:choose>
+            </header>
 
-            <!-- ============ Módulo del sistema ============ -->
-            <section class="modulos" aria-label="Módulos">
-
-                <a class="modulo modulo--cobro" href="<c:url value='/facturacion' />">
-                    <div class="modulo__superior">
-                        <span class="modulo__icono" aria-hidden="true">
-                            <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M6 2h12v20l-3-2-3 2-3-2-3 2V2z"/>
-                                <path d="M9.5 7.5h5"/>
-                                <path d="M9.5 11.5h5"/>
-                                <path d="M9.5 15.5h3"/>
-                            </svg>
-                        </span>
-                        <div>
-                            <p class="modulo__etiqueta">Módulo 1 · Caja</p>
-                            <h2 class="modulo__titulo">Facturación</h2>
-                        </div>
-                    </div>
-                    <p class="modulo__desc">
-                        Cobra los productos del inventario, registra la venta y emite la factura
-                        del cliente en el mismo sistema.
+            <!-- ===== Banner Facturación ===== -->
+            <section class="dx-hero">
+                <div class="dx-hero__texto">
+                    <p class="dx-hero__etiqueta">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2V2z"/><path d="M9.5 8h5M9.5 12h5"/></svg>
+                        Módulo 1 · Caja
                     </p>
-                    <ul class="modulo__lista">
-                        <li>Venta rápida</li>
-                        <li>Cliente y factura</li>
-                        <li>Descuenta stock solo</li>
-                    </ul>
-                    <span class="modulo__accion">
-                        Abrir caja
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 12h14M13 6l6 6-6 6"/>
-                        </svg>
-                    </span>
+                    <h2 class="dx-hero__titulo">Facturación &amp; Terminal de Venta</h2>
+                    <p class="dx-hero__desc">
+                        Cobra los productos del inventario, registra la venta con múltiples métodos de pago
+                        y emite la factura o boleta electrónica del cliente al instante en el mismo sistema.
+                    </p>
+                </div>
+                <a class="dx-hero__btn" href="<c:url value='/facturacion' />">
+                    Abrir caja y Vender
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </a>
-
             </section>
 
-            <!-- ============ Indicadores ============ -->
-            <h2 class="seccion-titulo">Resumen del inventario y ventas</h2>
+            <!-- ===== Indicadores ===== -->
+            <div class="dx-seccion">
+                <h2 class="dx-seccion__titulo">Resumen del inventario y ventas</h2>
+            </div>
 
-            <section class="kpis" aria-label="Indicadores">
+            <section class="dx-kpis" aria-label="Indicadores">
                 <c:choose>
                     <c:when test="${not empty resumen}">
 
-                        <article class="kpi">
-                            <p class="kpi__etiqueta">Productos</p>
-                            <p class="kpi__valor"><fmt:formatNumber value="${resumen.totalProductos}" /></p>
-                            <p class="kpi__nota">
-                                <fmt:formatNumber value="${resumen.totalCategorias}" /> categorías activas
+                        <article class="dx-kpi">
+                            <div class="dx-kpi__fila">
+                                <p class="dx-kpi__etiqueta">Productos</p>
+                                <span class="dx-kpi__icono dx-kpi__icono--azul">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/></svg>
+                                </span>
+                            </div>
+                            <p class="dx-kpi__valor"><fmt:formatNumber value="${resumen.totalProductos}" /></p>
+                            <p class="dx-kpi__nota"><fmt:formatNumber value="${resumen.totalCategorias}" /> categorías activas</p>
+                            <div class="dx-barra"><span style="width:100%"></span></div>
+                        </article>
+
+                        <article class="dx-kpi">
+                            <div class="dx-kpi__fila">
+                                <p class="dx-kpi__etiqueta">Unidades en stock</p>
+                                <span class="dx-kpi__icono dx-kpi__icono--cian">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                </span>
+                            </div>
+                            <p class="dx-kpi__valor"><fmt:formatNumber value="${resumen.unidadesEnStock}" /></p>
+                            <p class="dx-kpi__nota">piezas totales en almacén</p>
+                        </article>
+
+                        <article class="dx-kpi dx-kpi--alerta">
+                            <div class="dx-kpi__fila">
+                                <p class="dx-kpi__etiqueta">Stock bajo</p>
+                                <span class="dx-kpi__icono dx-kpi__icono--ambar">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+                                </span>
+                            </div>
+                            <p class="dx-kpi__valor"><fmt:formatNumber value="${resumen.productosStockBajo}" /></p>
+                            <p class="dx-kpi__nota">productos en o por debajo del mínimo</p>
+                        </article>
+
+                        <article class="dx-kpi">
+                            <div class="dx-kpi__fila">
+                                <p class="dx-kpi__etiqueta">Ventas de hoy</p>
+                                <span class="dx-kpi__icono dx-kpi__icono--verde">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+                                </span>
+                            </div>
+                            <p class="dx-kpi__valor">
+                                <fmt:formatNumber value="${resumen.ventasHoy}" type="currency" currencyCode="COP" maxFractionDigits="0" />
                             </p>
+                            <p class="dx-kpi__nota">acumulado del día</p>
                         </article>
 
-                        <article class="kpi">
-                            <p class="kpi__etiqueta">Unidades en stock</p>
-                            <p class="kpi__valor"><fmt:formatNumber value="${resumen.unidadesEnStock}" /></p>
-                            <p class="kpi__nota">piezas totales en almacén</p>
-                        </article>
-
-                        <article class="kpi kpi--alerta">
-                            <p class="kpi__etiqueta">Stock bajo</p>
-                            <p class="kpi__valor"><fmt:formatNumber value="${resumen.productosStockBajo}" /></p>
-                            <p class="kpi__nota">productos en o por debajo del mínimo</p>
-                        </article>
-
-                        <article class="kpi kpi--venta">
-                            <p class="kpi__etiqueta">Ventas de hoy</p>
-                            <p class="kpi__valor">
-                                <fmt:formatNumber value="${resumen.ventasHoy}" type="currency"
-                                                  currencyCode="COP" maxFractionDigits="0" />
+                        <article class="dx-kpi">
+                            <div class="dx-kpi__fila">
+                                <p class="dx-kpi__etiqueta">Ventas de la semana</p>
+                                <span class="dx-kpi__icono dx-kpi__icono--indigo">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V10M12 21V4M19 21v-7"/></svg>
+                                </span>
+                            </div>
+                            <p class="dx-kpi__valor">
+                                <fmt:formatNumber value="${resumen.ventasSemana}" type="currency" currencyCode="COP" maxFractionDigits="0" />
                             </p>
-                            <p class="kpi__nota">acumulado del día</p>
+                            <p class="dx-kpi__nota">desde el lunes de esta semana</p>
                         </article>
 
-                        <article class="kpi kpi--venta">
-                            <p class="kpi__etiqueta">Ventas de la semana</p>
-                            <p class="kpi__valor">
-                                <fmt:formatNumber value="${resumen.ventasSemana}" type="currency"
-                                                  currencyCode="COP" maxFractionDigits="0" />
+                        <article class="dx-kpi">
+                            <div class="dx-kpi__fila">
+                                <p class="dx-kpi__etiqueta">Ventas del mes</p>
+                                <span class="dx-kpi__icono dx-kpi__icono--violeta">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                                </span>
+                            </div>
+                            <p class="dx-kpi__valor">
+                                <fmt:formatNumber value="${resumen.ventasMes}" type="currency" currencyCode="COP" maxFractionDigits="0" />
                             </p>
-                            <p class="kpi__nota">desde el lunes de esta semana</p>
-                        </article>
-
-                        <article class="kpi kpi--venta">
-                            <p class="kpi__etiqueta">Ventas del mes</p>
-                            <p class="kpi__valor">
-                                <fmt:formatNumber value="${resumen.ventasMes}" type="currency"
-                                                  currencyCode="COP" maxFractionDigits="0" />
-                            </p>
-                            <p class="kpi__nota">mes en curso</p>
+                            <p class="dx-kpi__nota">mes en curso</p>
+                            <div class="dx-barra"><span style="width:70%"></span></div>
                         </article>
 
                     </c:when>
                     <c:otherwise>
-                        <article class="kpi kpi--alerta" style="grid-column: 1 / -1;">
-                            <p class="kpi__etiqueta">Sin datos</p>
-                            <p class="kpi__valor" style="font-size:1.1rem;">No se pudieron cargar los indicadores</p>
-                            <p class="kpi__nota" style="word-break:break-word;">
-                                <c:out value="${errorBD}" />
-                            </p>
-                            <p class="kpi__nota">
-                                Revisa que SQL Server esté corriendo y que exista la base
-                                <strong>dbIaInventario</strong>.
-                            </p>
+                        <article class="dx-kpi dx-kpi--alerta dx-kpi--ancho">
+                            <p class="dx-kpi__etiqueta">Sin datos</p>
+                            <p class="dx-kpi__valor dx-kpi__valor--chico">No se pudieron cargar los indicadores</p>
+                            <p class="dx-kpi__nota" style="word-break:break-word;"><c:out value="${errorBD}" /></p>
+                            <p class="dx-kpi__nota">Revisa que SQL Server esté corriendo y que exista la base <strong>dbIaInventario</strong>.</p>
                         </article>
                     </c:otherwise>
                 </c:choose>
             </section>
 
+            <!-- ===== Últimas ventas + Alertas ===== -->
+            <section class="dx-grid">
+
+                <!-- Tabla de últimas ventas -->
+                <article class="dx-panel">
+                    <header class="dx-panel__head">
+                        <div>
+                            <h2 class="dx-panel__titulo">Últimas Transacciones y Ventas</h2>
+                            <p class="dx-panel__sub">Tickets de caja registrados durante la jornada de hoy</p>
+                        </div>
+                        <a class="dx-btn-sec" href="<c:url value='/facturacion/historial' />">Ver todas</a>
+                    </header>
+
+                    <div class="dx-tabla-wrap">
+                        <table class="dx-tabla">
+                            <thead>
+                                <tr>
+                                    <th>N° Ticket / Hora</th>
+                                    <th>Cliente</th>
+                                    <th class="dx-c">Ítems</th>
+                                    <th>Método pago</th>
+                                    <th class="dx-r">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:choose>
+                                    <c:when test="${not empty ultimasVentas}">
+                                        <c:forEach var="v" items="${ultimasVentas}">
+                                            <tr>
+                                                <td>
+                                                    <span class="dx-tk"><c:out value="${v.numeroTicket}" /></span>
+                                                    <span class="dx-tk-sub"><fmt:formatDate value="${v.fecha}" pattern="hh:mm a" /></span>
+                                                </td>
+                                                <td>
+                                                    <span class="dx-cli"><c:out value="${v.cliente}" /></span>
+                                                    <span class="dx-tk-sub"><c:out value="${v.documento}" /></span>
+                                                </td>
+                                                <td class="dx-c"><span class="dx-pill"><c:out value="${v.items}" /> items</span></td>
+                                                <td><c:out value="${v.metodoPago}" /></td>
+                                                <td class="dx-r dx-total">
+                                                    <fmt:formatNumber value="${v.total}" type="currency" currencyCode="COP" maxFractionDigits="0" />
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <tr><td colspan="5" class="dx-vacio">Aún no hay ventas registradas hoy.</td></tr>
+                                    </c:otherwise>
+                                </c:choose>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <!-- Alertas de stock crítico -->
+                <aside class="dx-panel dx-panel--alertas">
+                    <header class="dx-panel__head">
+                        <h2 class="dx-panel__titulo">
+                            <span class="dx-dot-alerta"></span>
+                            Alertas de Stock Crítico (<c:out value="${empty alertasStock ? 0 : alertasStock.size()}" />)
+                        </h2>
+                        <span class="dx-badge">Acción requerida</span>
+                    </header>
+
+                    <ul class="dx-alertas">
+                        <c:forEach var="a" items="${alertasStock}">
+                            <li class="dx-alerta">
+                                <div>
+                                    <p class="dx-alerta__nombre"><c:out value="${a.nombre}" /></p>
+                                    <p class="dx-alerta__meta">SKU: <c:out value="${a.sku}" /> · Mínimo: <c:out value="${a.minimo}" /></p>
+                                </div>
+                                <span class="dx-stock"><c:out value="${a.stock}" /> disp.</span>
+                            </li>
+                        </c:forEach>
+                        <c:if test="${empty alertasStock}">
+                            <li class="dx-vacio">Todo el inventario está sobre el mínimo.</li>
+                            </c:if>
+                    </ul>
+                </aside>
+
+            </section>
         </main>
 
-        <footer class="pie">
+        <footer class="dx-pie">
             <p><strong>Saca Clavos</strong> · Sistema de inventario, facturación y asistente con inteligencia artificial</p>
         </footer>
 
-        <%-- Widget flotante del asistente IA (burbuja + ventana de chat) --%>
         <%@ include file="componentes/widget-ia.jspf" %>
 
     </body>
