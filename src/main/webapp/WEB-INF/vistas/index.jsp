@@ -16,6 +16,7 @@
         <meta name="theme-color" content="#0A2E58">
         <title>Saca Clavos · Panel de control</title>
         <link rel="stylesheet" href="<c:url value='/assets/css/inventario.css' />">
+        <link rel="stylesheet" href="<c:url value='/assets/css/modulos.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/widget-ia.css' />">
         <%-- Fuente elegante para la marca "SacaClavos" (con respaldo serif si no hay internet) --%>
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -227,73 +228,126 @@
             <!-- ============ Indicadores ============ -->
             <h2 class="seccion-titulo">Resumen del inventario y ventas</h2>
 
-            <section class="kpis" aria-label="Indicadores">
-                <c:choose>
-                    <c:when test="${not empty resumen}">
+            <div class="resumen-fila">
+                <section class="kpis" aria-label="Indicadores">
+                    <c:choose>
+                        <c:when test="${not empty resumen}">
 
-                        <article class="kpi">
-                            <p class="kpi__etiqueta">Productos</p>
-                            <p class="kpi__valor"><fmt:formatNumber value="${resumen.totalProductos}" /></p>
-                            <p class="kpi__nota">
-                                <fmt:formatNumber value="${resumen.totalCategorias}" /> categorías activas
+                            <article class="kpi">
+                                <p class="kpi__etiqueta">Productos</p>
+                                <p class="kpi__valor"><fmt:formatNumber value="${resumen.totalProductos}" /></p>
+                                <p class="kpi__nota">
+                                    <fmt:formatNumber value="${resumen.totalCategorias}" /> categorías activas
+                                </p>
+                            </article>
+
+                            <article class="kpi">
+                                <p class="kpi__etiqueta">Unidades en stock</p>
+                                <p class="kpi__valor"><fmt:formatNumber value="${resumen.unidadesEnStock}" /></p>
+                                <p class="kpi__nota">piezas totales en almacén</p>
+                            </article>
+
+                            <a class="kpi kpi--alerta" href="<c:url value='/alertas' />" style="display:block;text-decoration:none;">
+                                <p class="kpi__etiqueta">Stock bajo</p>
+                                <p class="kpi__valor"><fmt:formatNumber value="${alertas.size()}" /></p>
+                                <p class="kpi__nota">productos en o por debajo del mínimo · toca para ver las alertas</p>
+                            </a>
+
+                            <article class="kpi kpi--venta">
+                                <p class="kpi__etiqueta">Ventas de hoy</p>
+                                <p class="kpi__valor">
+                                    <fmt:formatNumber value="${resumen.ventasHoy}" type="currency"
+                                                      currencyCode="COP" maxFractionDigits="0" />
+                                </p>
+                                <p class="kpi__nota">acumulado del día</p>
+                            </article>
+
+                            <article class="kpi kpi--venta">
+                                <p class="kpi__etiqueta">Ventas de la semana</p>
+                                <p class="kpi__valor">
+                                    <fmt:formatNumber value="${resumen.ventasSemana}" type="currency"
+                                                      currencyCode="COP" maxFractionDigits="0" />
+                                </p>
+                                <p class="kpi__nota">desde el lunes de esta semana</p>
+                            </article>
+
+                            <article class="kpi kpi--venta">
+                                <p class="kpi__etiqueta">Ventas del mes</p>
+                                <p class="kpi__valor">
+                                    <fmt:formatNumber value="${resumen.ventasMes}" type="currency"
+                                                      currencyCode="COP" maxFractionDigits="0" />
+                                </p>
+                                <p class="kpi__nota">mes en curso</p>
+                            </article>
+
+                        </c:when>
+                        <c:otherwise>
+                            <article class="kpi kpi--alerta" style="grid-column: 1 / -1;">
+                                <p class="kpi__etiqueta">Sin datos</p>
+                                <p class="kpi__valor" style="font-size:1.1rem;">No se pudieron cargar los indicadores</p>
+                                <p class="kpi__nota" style="word-break:break-word;">
+                                    <c:out value="${errorBD}" />
+                                </p>
+                                <p class="kpi__nota">
+                                    Revisa que SQL Server esté corriendo y que exista la base
+                                    <strong>dbIaInventario</strong>.
+                                </p>
+                            </article>
+                        </c:otherwise>
+                    </c:choose>
+                </section>
+
+                <!-- ============ Tablero de alertas ============ -->
+                <aside class="panel-alertas" aria-label="Alertas de stock">
+                    <div class="panel-alertas__cabecera">
+                        <span class="panel-alertas__icono" aria-hidden="true">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>
+                                <path d="M12 9v4"/>
+                                <path d="M12 17h.01"/>
+                            </svg>
+                        </span>
+                        <div>
+                            <h3>Alertas de stock</h3>
+                            <p class="panel-alertas__sub">
+                                <c:choose>
+                                    <c:when test="${not empty errorBD}">Estado del inventario no disponible</c:when>
+                                    <c:otherwise>Hay <strong>${alertas.size()}</strong> producto(s) por debajo del mínimo</c:otherwise>
+                                </c:choose>
                             </p>
-                        </article>
+                        </div>
+                    </div>
 
-                        <article class="kpi">
-                            <p class="kpi__etiqueta">Unidades en stock</p>
-                            <p class="kpi__valor"><fmt:formatNumber value="${resumen.unidadesEnStock}" /></p>
-                            <p class="kpi__nota">piezas totales en almacén</p>
-                        </article>
-
-                        <a class="kpi kpi--alerta" href="<c:url value='/alertas' />" style="display:block;text-decoration:none;">
-                            <p class="kpi__etiqueta">Stock bajo</p>
-                            <p class="kpi__valor"><fmt:formatNumber value="${alertas}" /></p>
-                            <p class="kpi__nota">productos en o por debajo del mínimo · toca para ver las alertas</p>
-                        </a>
-
-                        <article class="kpi kpi--venta">
-                            <p class="kpi__etiqueta">Ventas de hoy</p>
-                            <p class="kpi__valor">
-                                <fmt:formatNumber value="${resumen.ventasHoy}" type="currency"
-                                                  currencyCode="COP" maxFractionDigits="0" />
+                    <c:choose>
+                        <c:when test="${not empty errorBD}">
+                            <p class="caja-msg caja-msg--err" style="margin-bottom:0;">
+                                No se pudieron cargar las alertas: <c:out value="${errorBD}" />
                             </p>
-                            <p class="kpi__nota">acumulado del día</p>
-                        </article>
+                        </c:when>
+                        <c:when test="${not empty alertas}">
+                            <ul class="panel-alertas__lista">
+                                <c:forEach items="${alertas}" var="a" end="3">
+                                    <li class="panel-alertas__item">
+                                        <span>
+                                            <strong><c:out value="${a.nombre}" /></strong>
+                                            <small>Mínimo: ${a.stockMinimo}</small>
+                                        </span>
+                                        <span class="panel-alertas__stock">${a.stock} / ${a.stockMinimo}</span>
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </c:when>
+                        <c:otherwise>
+                            <p class="panel-alertas__ok">Todo en orden: ningún producto está por debajo del mínimo</p>
+                        </c:otherwise>
+                    </c:choose>
 
-                        <article class="kpi kpi--venta">
-                            <p class="kpi__etiqueta">Ventas de la semana</p>
-                            <p class="kpi__valor">
-                                <fmt:formatNumber value="${resumen.ventasSemana}" type="currency"
-                                                  currencyCode="COP" maxFractionDigits="0" />
-                            </p>
-                            <p class="kpi__nota">desde el lunes de esta semana</p>
-                        </article>
-
-                        <article class="kpi kpi--venta">
-                            <p class="kpi__etiqueta">Ventas del mes</p>
-                            <p class="kpi__valor">
-                                <fmt:formatNumber value="${resumen.ventasMes}" type="currency"
-                                                  currencyCode="COP" maxFractionDigits="0" />
-                            </p>
-                            <p class="kpi__nota">mes en curso</p>
-                        </article>
-
-                    </c:when>
-                    <c:otherwise>
-                        <article class="kpi kpi--alerta" style="grid-column: 1 / -1;">
-                            <p class="kpi__etiqueta">Sin datos</p>
-                            <p class="kpi__valor" style="font-size:1.1rem;">No se pudieron cargar los indicadores</p>
-                            <p class="kpi__nota" style="word-break:break-word;">
-                                <c:out value="${errorBD}" />
-                            </p>
-                            <p class="kpi__nota">
-                                Revisa que SQL Server esté corriendo y que exista la base
-                                <strong>dbIaInventario</strong>.
-                            </p>
-                        </article>
-                    </c:otherwise>
-                </c:choose>
-            </section>
+                    <c:if test="${not empty alertas}">
+                        <a class="panel-alertas__link" href="<c:url value='/alertas' />">Ver todas las alertas →</a>
+                    </c:if>
+                </aside>
+            </div>
 
         </main>
 

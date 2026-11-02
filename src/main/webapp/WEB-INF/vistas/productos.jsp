@@ -14,39 +14,11 @@
         <meta name="theme-color" content="#0A2E58">
         <title>Saca Clavos · Productos</title>
         <link rel="stylesheet" href="<c:url value='/assets/css/inventario.css' />">
+        <link rel="stylesheet" href="<c:url value='/assets/css/modulos.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/widget-ia.css' />">
-        <style>
-            .caja-card { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: var(--radio); padding: 22px; box-shadow: var(--sombra-sm); margin-bottom: 24px; }
-            .caja-card h2 { margin: 0 0 4px; font-size: 1.04rem; font-weight: 700; color: var(--azul-900); }
-            .caja-card__sub { margin: 0 0 16px; font-size: .84rem; color: var(--texto-suave); }
-            .caja-fila { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
-            .caja-campo { margin-bottom: 14px; }
-            .caja-fila .caja-campo { margin-bottom: 0; }
-            .caja-campo__label { display: block; margin-bottom: 6px; font-size: .7rem; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--texto-suave); }
-            .caja-campo input, .caja-campo select { width: 100%; padding: 12px 14px; border: 1px solid var(--borde); border-radius: 12px; background: var(--fondo); color: var(--texto); font-size: .93rem; font-family: inherit; }
-            .caja-campo input:focus, .caja-campo select:focus { outline: none; background: #FFFFFF; border-color: var(--azul-600); box-shadow: 0 0 0 4px rgba(21, 101, 192, .14); }
-            .caja-btn { width: 100%; padding: 14px; border: none; border-radius: 13px; font-size: .97rem; font-weight: 700; font-family: inherit; color: #FFFFFF; background: linear-gradient(135deg, var(--azul-700), var(--azul-800)); box-shadow: 0 10px 22px rgba(11, 60, 125, .30); cursor: pointer; transition: filter .16s ease; }
-            .caja-btn:hover { filter: brightness(1.1); }
-            .caja-tabla { overflow-x: auto; }
-            .caja-tabla table { width: 100%; border-collapse: collapse; font-size: .9rem; }
-            .caja-tabla th { padding: 0 8px 9px; font-size: .7rem; font-weight: 700; letter-spacing: .9px; text-transform: uppercase; color: var(--texto-suave); text-align: left; border-bottom: 1px solid var(--borde); }
-            .caja-tabla td { padding: 11px 8px; border-bottom: 1px solid #EDF3FA; vertical-align: middle; }
-            .caja-tabla tbody tr:last-child td { border-bottom: none; }
-            .caja-tabla tbody tr { transition: background .15s ease; }
-            .caja-tabla tbody tr:hover { background: #F7FBFF; }
-            .caja-vacio { margin-top: 14px; padding: 26px 14px; text-align: center; font-size: .87rem; color: var(--texto-suave); background: #F8FBFF; border: 1.5px dashed var(--borde); border-radius: 13px; }
-            .caja-msg { position: relative; margin-bottom: 18px; padding: 13px 16px 13px 46px; border-radius: 12px; font-size: .9rem; font-weight: 600; }
-            .caja-msg::before { content: ""; position: absolute; left: 15px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; background-repeat: no-repeat; background-position: center; background-size: contain; }
-            .caja-msg--ok { color: #15803D; background: #ECFDF3; border: 1px solid #BBE7CD; }
-            .caja-msg--ok::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2316A34A' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M8.4 12.3l2.5 2.5 4.7-5.2'/%3E%3C/svg%3E"); }
-            .caja-msg--err { color: #B91C1C; background: #FEF2F2; border: 1px solid #F6CBCB; }
-            .caja-msg--err::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23DC2626' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M9 9l6 6M15 9l-6 6'/%3E%3C/svg%3E"); }
-            .acciones { display: flex; gap: 8px; justify-content: flex-end; align-items: center; }
-            .btn-mini { padding: 6px 12px; border-radius: 9px; border: 1px solid var(--borde); background: #FFFFFF; color: var(--azul-700); font-size: .78rem; font-weight: 700; font-family: inherit; text-decoration: none; cursor: pointer; display: inline-block; }
-            .btn-mini--rojo { color: #B91C1C; border-color: #F6CBCB; background: #FEF2F2; }
-            .stock-bajo { color: #B91C1C; font-weight: 700; }
-            .editar-link { display: inline-block; margin-top: 10px; font-size: .84rem; color: var(--azul-700); font-weight: 700; }
-        </style>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     </head>
     <body>
 
@@ -72,9 +44,35 @@
                 <div class="caja-msg caja-msg--err"><c:out value="${error}" /></div>
             </c:if>
 
-            <section class="caja-card">
-                <h2><c:out value="${empty editando ? 'Nuevo producto' : 'Editando producto'}" /></h2>
-                <p class="caja-card__sub">Completa los datos y guarda para agregarlo al inventario</p>
+            <section class="caja-card${not empty editando ? ' caja-card--editando' : ''}">
+                <div class="caja-card__cabecera">
+                    <span class="caja-card__icono" aria-hidden="true">
+                        <c:choose>
+                            <c:when test="${not empty editando}">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 20h9"/>
+                                    <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+                                </svg>
+                            </c:when>
+                            <c:otherwise>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 5v14M5 12h14"/>
+                                </svg>
+                            </c:otherwise>
+                        </c:choose>
+                    </span>
+                    <div>
+                        <h2><c:out value="${empty editando ? 'Nuevo producto' : 'Editando producto'}" /></h2>
+                        <p class="caja-card__sub">
+                            <c:choose>
+                                <c:when test="${not empty editando}">Modifica los datos de <strong><c:out value="${editando.nombre}" /></strong> y guarda los cambios</c:when>
+                                <c:otherwise>Completa los datos y guarda para agregarlo al inventario</c:otherwise>
+                            </c:choose>
+                        </p>
+                    </div>
+                </div>
 
                 <form method="post" action="<c:url value='/productos' />">
                     <input type="hidden" name="accion" value="${empty editando ? 'insertar' : 'actualizar'}">
@@ -145,8 +143,20 @@
             </section>
 
             <section class="caja-card">
-                <h2>Productos registrados</h2>
-                <p class="caja-card__sub">Edita o elimina los productos del inventario</p>
+                <div class="caja-card__cabecera">
+                    <span class="caja-card__icono" aria-hidden="true">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 7l9-4 9 4-9 4-9-4z"/>
+                            <path d="M3 12l9 4 9-4"/>
+                            <path d="M3 17l9 4 9-4"/>
+                        </svg>
+                    </span>
+                    <div>
+                        <h2>Productos registrados</h2>
+                        <p class="caja-card__sub">Edita o elimina los productos del inventario</p>
+                    </div>
+                </div>
 
                 <c:choose>
                     <c:when test="${not empty productos}">
