@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +51,12 @@ public class SalidaDAO {
             ps.setDouble(3, s.getPrecioUnitario());
             ps.setString(4, s.getCliente());
             ps.setString(5, s.getObservaciones());
-            ps.setInt(6, s.getIdFactura());
+
+            if (s.getIdFactura() > 0) {
+                ps.setInt(6, s.getIdFactura());
+            } else {
+                ps.setNull(6, Types.INTEGER);
+            }
 
             return ps.executeUpdate() > 0;
         }
