@@ -14,28 +14,29 @@
         <meta name="theme-color" content="#0A2E58">
         <title>Saca Clavos · Entradas</title>
         <link rel="stylesheet" href="<c:url value='/assets/css/inventario.css' />">
+        <link rel="stylesheet" href="<c:url value='/assets/css/dashboard.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/modulos.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/widget-ia.css' />">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     </head>
-    <body>
+    <body class="dx-body">
 
         <% pageContext.setAttribute("paginaActiva", "entradas"); %>
         <%@ include file="componentes/topbar.jspf" %>
 
-        <main class="contenedor">
+        <main class="dx-contenedor">
 
-            <section class="encabezado">
-                <div class="encabezado__fila">
-                    <div>
-                        <h1 class="encabezado__titulo">Entradas de mercancía</h1>
-                        <span class="encabezado__fecha">Módulo 3 · Compras</span>
-                    </div>
-                    <span class="chip"><span class="chip__punto"></span>Almacén</span>
+            <!-- ===== Encabezado ===== -->
+            <header class="dx-head">
+                <div>
+                    <p class="dx-head__fecha">Módulo 3 · Compras</p>
+                    <h1 class="dx-head__titulo">Entradas de mercancía</h1>
+                    <p class="dx-head__sub">Registra la mercancía que llega al almacén: el stock del producto suma al instante.</p>
                 </div>
-            </section>
+                <span class="dx-chip"><span class="dx-chip__punto"></span>Almacén</span>
+            </header>
 
             <c:if test="${not empty exito}">
                 <div class="caja-msg caja-msg--ok"><c:out value="${exito}" /></div>
@@ -44,21 +45,21 @@
                 <div class="caja-msg caja-msg--err"><c:out value="${error}" /></div>
             </c:if>
 
-            <section class="caja-card">
-                <div class="caja-card__cabecera">
-                    <span class="caja-card__icono" aria-hidden="true">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 3v9"/>
-                            <path d="M8.5 8.5L12 12l3.5-3.5"/>
-                            <path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>
-                        </svg>
-                    </span>
+            <!-- ===== Formulario en 3 pasos ===== -->
+            <section class="dx-panel">
+                <header class="dx-panel__head">
                     <div>
-                        <h2>¿Qué mercancía llegó?</h2>
-                        <p class="caja-card__sub">Elige el producto, indica cuántas unidades llegaron y de quién</p>
+                        <h2 class="dx-panel__titulo">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M12 3v9"/>
+                                <path d="M8.5 8.5L12 12l3.5-3.5"/>
+                                <path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>
+                            </svg>
+                            ¿Qué mercancía llegó?
+                        </h2>
+                        <p class="dx-panel__sub">Elige el producto, indica cuántas unidades llegaron y de quién</p>
                     </div>
-                </div>
+                </header>
 
                 <form method="post" action="<c:url value='/entradas' />">
                     <input type="hidden" name="accion" value="registrar">
@@ -116,30 +117,25 @@
                 </form>
             </section>
 
-            <section class="caja-card">
-                <div class="caja-card__cabecera">
-                    <span class="caja-card__icono" aria-hidden="true">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 6h16M4 12h16M4 18h10"/>
-                        </svg>
-                    </span>
+            <!-- ===== Historial ===== -->
+            <section class="dx-panel">
+                <header class="dx-panel__head">
                     <div>
-                        <h2>Historial de entradas</h2>
-                        <p class="caja-card__sub">Últimas compras registradas en el almacén</p>
+                        <h2 class="dx-panel__titulo">Historial de entradas</h2>
+                        <p class="dx-panel__sub">Últimas compras registradas en el almacén</p>
                     </div>
-                </div>
+                </header>
 
                 <c:choose>
                     <c:when test="${not empty entradas}">
-                        <div class="caja-tabla">
-                            <table>
+                        <div class="dx-tabla-wrap">
+                            <table class="dx-tabla">
                                 <thead>
                                     <tr>
                                         <th>Fecha</th>
                                         <th>Producto</th>
-                                        <th>Cant.</th>
-                                        <th>Precio unit.</th>
+                                        <th class="dx-c">Cant.</th>
+                                        <th class="dx-r">Precio unit.</th>
                                         <th>Proveedor</th>
                                         <th>Observaciones</th>
                                     </tr>
@@ -147,10 +143,10 @@
                                 <tbody>
                                     <c:forEach items="${entradas}" var="e">
                                         <tr>
-                                            <td><fmt:formatDate value="${e.fecha}" pattern="dd/MM/yyyy HH:mm" /></td>
-                                            <td><c:out value="${e.nombreProducto}" /></td>
-                                            <td>${e.cantidad}</td>
-                                            <td><fmt:formatNumber value="${e.precioUnitario}" type="currency" currencyCode="COP" maxFractionDigits="0" /></td>
+                                            <td><c:out value="${e.fechaTexto}" /></td>
+                                            <td><span class="dx-cli"><c:out value="${e.nombreProducto}" /></span></td>
+                                            <td class="dx-c"><span class="dx-pill"><c:out value="${e.cantidad}" /></span></td>
+                                            <td class="dx-r dx-total"><fmt:formatNumber value="${e.precioUnitario}" type="currency" currencyCode="COP" maxFractionDigits="0" /></td>
                                             <td><c:out value="${e.proveedor}" /></td>
                                             <td><c:out value="${empty e.observaciones ? '—' : e.observaciones}" /></td>
                                         </tr>
@@ -160,14 +156,14 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <p class="caja-vacio">Aún no hay entradas registradas</p>
+                        <p class="dx-vacio" style="padding:20px !important;">Aún no hay entradas registradas.</p>
                     </c:otherwise>
                 </c:choose>
             </section>
 
         </main>
 
-        <footer class="pie">
+        <footer class="dx-pie">
             <p><strong>Saca Clavos</strong> · Sistema de inventario, facturación y asistente con inteligencia artificial</p>
         </footer>
 
@@ -177,7 +173,6 @@
             (function () {
                 var sel = document.getElementById('idProducto');
                 var cant = document.getElementById('cantidad');
-                var caja = document.getElementById('stockPreview');
                 var actual = document.getElementById('stockActual');
                 var quedara = document.getElementById('stockQuedara');
 

@@ -14,11 +14,12 @@
         <meta name="theme-color" content="#0A2E58">
         <title>Saca Clavos · Facturación</title>
         <link rel="stylesheet" href="<c:url value='/assets/css/inventario.css' />">
+        <link rel="stylesheet" href="<c:url value='/assets/css/dashboard.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/widget-ia.css' />">
         <%-- Fuente elegante para la marca "SacaClavos" (con respaldo serif si no hay internet) --%>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
         <style>
             /* ==========================================================
                FACTURACIÓN · estilos de esta vista
@@ -629,22 +630,22 @@
             }
         </style>
     </head>
-    <body>
+    <body class="dx-body">
 
         <% pageContext.setAttribute("paginaActiva", "facturacion");%>
         <%@ include file="componentes/topbar.jspf" %>
 
-        <main class="contenedor">
+        <main class="dx-contenedor">
 
-            <section class="encabezado">
-                <div class="encabezado__fila">
-                    <div>
-                        <h1 class="encabezado__titulo">Facturación</h1>
-                        <span class="encabezado__fecha">Módulo 1 · Caja</span>
-                    </div>
-                    <span class="chip"><span class="chip__punto"></span>Caja abierta</span>
+            <!-- ===== Encabezado ===== -->
+            <header class="dx-head">
+                <div>
+                    <p class="dx-head__fecha">Módulo 1 · Caja</p>
+                    <h1 class="dx-head__titulo">Facturación</h1>
+                    <p class="dx-head__sub">Busca el producto, arma la factura y cobra al cliente en el mismo sistema.</p>
                 </div>
-            </section>
+                <span class="dx-chip"><span class="dx-chip__punto"></span>Caja abierta</span>
+            </header>
 
             <c:if test="${not empty exito}">
                 <div class="caja-msg caja-msg--ok"><c:out value="${exito}" /></div>
@@ -656,20 +657,20 @@
             <div class="caja">
 
                 <!-- Buscador -->
-                <section class="caja-card caja-card--buscador">
-                    <div class="caja-card__cabecera">
-                        <span class="caja-card__icono" aria-hidden="true">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="11" cy="11" r="7"/>
-                                <path d="M20 20l-3.6-3.6"/>
-                            </svg>
-                        </span>
+                <section class="dx-panel">
+                    <header class="dx-panel__head">
                         <div>
-                            <h2>Buscar producto</h2>
-                            <p class="caja-card__sub">Escribe y toca un producto para agregarlo</p>
+                            <h2 class="dx-panel__titulo">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <circle cx="11" cy="11" r="7"/>
+                                    <path d="M20 20l-3.6-3.6"/>
+                                </svg>
+                                Buscar producto
+                            </h2>
+                            <p class="dx-panel__sub">Escribe y toca un producto para agregarlo</p>
                         </div>
-                    </div>
+                    </header>
                     <div class="caja-buscador">
                         <svg class="caja-buscador__lupa" width="18" height="18" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -682,22 +683,22 @@
                 </section>
 
                 <!-- Factura -->
-                <section class="caja-card caja-card--factura">
-                    <div class="caja-card__cabecera">
-                        <span class="caja-card__icono" aria-hidden="true">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M6 2h12v20l-3-2-3 2-3-2-3 2V2z"/>
-                                <path d="M9.5 7.5h5"/>
-                                <path d="M9.5 11.5h5"/>
-                                <path d="M9.5 15.5h3"/>
-                            </svg>
-                        </span>
+                <section class="dx-panel">
+                    <header class="dx-panel__head">
                         <div>
-                            <h2>Factura actual</h2>
-                            <p class="caja-card__sub">Revisa cantidades y cobra al cliente</p>
+                            <h2 class="dx-panel__titulo">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M6 2h12v20l-3-2-3 2-3-2-3 2V2z"/>
+                                    <path d="M9.5 7.5h5"/>
+                                    <path d="M9.5 11.5h5"/>
+                                    <path d="M9.5 15.5h3"/>
+                                </svg>
+                                Factura actual
+                            </h2>
+                            <p class="dx-panel__sub">Revisa cantidades y cobra al cliente</p>
                         </div>
-                    </div>
+                    </header>
                     <form id="formFactura" method="post" action="<c:url value='/facturacion' />">
                         <div class="caja-tabla">
                             <table>
@@ -730,7 +731,7 @@
             </div>
         </main>
 
-        <footer class="pie">
+        <footer class="dx-pie">
             <p><strong>Saca Clavos</strong> · Sistema de inventario, facturación y asistente con inteligencia artificial</p>
         </footer>
 

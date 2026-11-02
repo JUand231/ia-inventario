@@ -14,28 +14,29 @@
         <meta name="theme-color" content="#0A2E58">
         <title>Saca Clavos · Productos</title>
         <link rel="stylesheet" href="<c:url value='/assets/css/inventario.css' />">
+        <link rel="stylesheet" href="<c:url value='/assets/css/dashboard.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/modulos.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/widget-ia.css' />">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     </head>
-    <body>
+    <body class="dx-body">
 
         <% pageContext.setAttribute("paginaActiva", "productos"); %>
         <%@ include file="componentes/topbar.jspf" %>
 
-        <main class="contenedor">
+        <main class="dx-contenedor">
 
-            <section class="encabezado">
-                <div class="encabezado__fila">
-                    <div>
-                        <h1 class="encabezado__titulo">Productos</h1>
-                        <span class="encabezado__fecha">Módulo 2 · Inventario</span>
-                    </div>
-                    <span class="chip"><span class="chip__punto"></span>Inventario activo</span>
+            <!-- ===== Encabezado ===== -->
+            <header class="dx-head">
+                <div>
+                    <p class="dx-head__fecha">Módulo 2 · Inventario</p>
+                    <h1 class="dx-head__titulo">Productos</h1>
+                    <p class="dx-head__sub">Administra el catálogo: precios, stock mínimo y ubicación de cada producto.</p>
                 </div>
-            </section>
+                <span class="dx-chip"><span class="dx-chip__punto"></span>Inventario activo</span>
+            </header>
 
             <c:if test="${not empty exito}">
                 <div class="caja-msg caja-msg--ok"><c:out value="${exito}" /></div>
@@ -44,35 +45,35 @@
                 <div class="caja-msg caja-msg--err"><c:out value="${error}" /></div>
             </c:if>
 
-            <section class="caja-card${not empty editando ? ' caja-card--editando' : ''}">
-                <div class="caja-card__cabecera">
-                    <span class="caja-card__icono" aria-hidden="true">
-                        <c:choose>
-                            <c:when test="${not empty editando}">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 20h9"/>
-                                    <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
-                                </svg>
-                            </c:when>
-                            <c:otherwise>
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 5v14M5 12h14"/>
-                                </svg>
-                            </c:otherwise>
-                        </c:choose>
-                    </span>
+            <!-- ===== Formulario (nuevo / edición) ===== -->
+            <section class="dx-panel${not empty editando ? ' dx-panel--editando' : ''}">
+                <header class="dx-panel__head">
                     <div>
-                        <h2><c:out value="${empty editando ? 'Nuevo producto' : 'Editando producto'}" /></h2>
-                        <p class="caja-card__sub">
+                        <h2 class="dx-panel__titulo">
+                            <c:choose>
+                                <c:when test="${not empty editando}">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M12 20h9"/>
+                                        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+                                    </svg>
+                                    Editando producto
+                                </c:when>
+                                <c:otherwise>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M12 5v14M5 12h14"/>
+                                    </svg>
+                                    Nuevo producto
+                                </c:otherwise>
+                            </c:choose>
+                        </h2>
+                        <p class="dx-panel__sub">
                             <c:choose>
                                 <c:when test="${not empty editando}">Modifica los datos de <strong><c:out value="${editando.nombre}" /></strong> y guarda los cambios</c:when>
                                 <c:otherwise>Completa los datos y guarda para agregarlo al inventario</c:otherwise>
                             </c:choose>
                         </p>
                     </div>
-                </div>
+                </header>
 
                 <form method="post" action="<c:url value='/productos' />">
                     <input type="hidden" name="accion" value="${empty editando ? 'insertar' : 'actualizar'}">
@@ -142,32 +143,25 @@
                 </form>
             </section>
 
-            <section class="caja-card">
-                <div class="caja-card__cabecera">
-                    <span class="caja-card__icono" aria-hidden="true">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 7l9-4 9 4-9 4-9-4z"/>
-                            <path d="M3 12l9 4 9-4"/>
-                            <path d="M3 17l9 4 9-4"/>
-                        </svg>
-                    </span>
+            <!-- ===== Listado ===== -->
+            <section class="dx-panel">
+                <header class="dx-panel__head">
                     <div>
-                        <h2>Productos registrados</h2>
-                        <p class="caja-card__sub">Edita o elimina los productos del inventario</p>
+                        <h2 class="dx-panel__titulo">Productos registrados</h2>
+                        <p class="dx-panel__sub">Edita o elimina los productos del inventario</p>
                     </div>
-                </div>
+                </header>
 
                 <c:choose>
                     <c:when test="${not empty productos}">
-                        <div class="caja-tabla">
-                            <table>
+                        <div class="dx-tabla-wrap">
+                            <table class="dx-tabla">
                                 <thead>
                                     <tr>
                                         <th>Producto</th>
-                                        <th>Precio venta</th>
-                                        <th>Stock</th>
-                                        <th>Mínimo</th>
+                                        <th class="dx-r">Precio venta</th>
+                                        <th class="dx-c">Stock</th>
+                                        <th class="dx-c">Mínimo</th>
                                         <th>Ubicación</th>
                                         <th></th>
                                     </tr>
@@ -175,10 +169,19 @@
                                 <tbody>
                                     <c:forEach items="${productos}" var="p">
                                         <tr>
-                                            <td><c:out value="${p.nombre}" /></td>
-                                            <td><fmt:formatNumber value="${p.precioVenta}" type="currency" currencyCode="COP" maxFractionDigits="0" /></td>
-                                            <td class="${p.stock <= p.stockMinimo ? 'stock-bajo' : ''}">${p.stock}</td>
-                                            <td>${p.stockMinimo}</td>
+                                            <td><span class="dx-cli"><c:out value="${p.nombre}" /></span></td>
+                                            <td class="dx-r dx-total"><fmt:formatNumber value="${p.precioVenta}" type="currency" currencyCode="COP" maxFractionDigits="0" /></td>
+                                            <td class="dx-c">
+                                                <c:choose>
+                                                    <c:when test="${p.stock <= p.stockMinimo}">
+                                                        <span class="dx-stock">${p.stock}</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        ${p.stock}
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td class="dx-c">${p.stockMinimo}</td>
                                             <td><c:out value="${empty p.ubicacion ? '—' : p.ubicacion}" /></td>
                                             <td>
                                                 <div class="acciones">
@@ -198,14 +201,14 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <p class="caja-vacio">No hay productos registrados aún</p>
+                        <p class="dx-vacio" style="padding:20px !important;">No hay productos registrados aún.</p>
                     </c:otherwise>
                 </c:choose>
             </section>
 
         </main>
 
-        <footer class="pie">
+        <footer class="dx-pie">
             <p><strong>Saca Clavos</strong> · Sistema de inventario, facturación y asistente con inteligencia artificial</p>
         </footer>
 

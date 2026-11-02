@@ -1,12 +1,15 @@
 package com.adso.ia.dao;
 
 import com.adso.ia.model.ResumenPanel;
+import com.adso.ia.model.VentaReciente;
 import com.adso.ia.util.ConexionDB;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Consultas de estadisticas para el panel de inicio.
@@ -62,5 +65,36 @@ public class DashboardDAO {
     private BigDecimal dinero(ResultSet rs, String columna) throws SQLException {
         BigDecimal valor = rs.getBigDecimal(columna);
         return valor == null ? BigDecimal.ZERO : valor;
+    }
+
+    /**
+     * Las ultimas facturas registradas, de mas reciente a mas antigua.
+     *
+     * "items" = productos distintos de la factura (contados desde salidas,
+     * que es donde quedan los productos que salieron con cada factura).
+     */
+    public List<VentaReciente> ultimasVentas(int limite) throws SQLException {
+        String sql = "SELECT TOP (?) f.Id, f.fecha, f.cliente, f.metodo_pago, f.total, "
+                + " (SELECT COUNT(DISTINCT Id_producto) FROM salidas WHERE Id_factura = f.Id) AS items "
+                + " FROM facturas f ORDER BY f.fecha DESC";
+        List<VentaReciente> lista = new ArrayList<>();
+
+        try (Connection cn = ConexionDB.getConexion();
+                PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, limite);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    BigDecimal total = rs.getBigDecimal("total");
+                    lista.add(new VentaReciente(
+                            rs.getInt("Id"),
+                            rs.getTimestamp("fecha").toLocalDateTime(),
+                            rs.getString("cliente"),
+                            rs.getInt("items"),
+                            rs.getString("metodo_pago"),
+                            total == null ? BigDecimal.ZERO : total));
+                }
+            }
+        }
+        return lista;
     }
 }

@@ -1,7 +1,6 @@
 package com.adso.ia.servlet;
 
 import com.adso.ia.dao.DashboardDAO;
-import com.adso.ia.model.ResumenPanel;
 import com.adso.ia.service.ProductoService;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -36,14 +35,22 @@ public class InicioServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        DashboardDAO dashboard = new DashboardDAO();
+
         try {
-            ResumenPanel resumen = new DashboardDAO().obtenerResumen();
-            request.setAttribute("resumen", resumen);
+            request.setAttribute("resumen", dashboard.obtenerResumen());
             request.setAttribute("alertas", producto.listarStockBajo());
         } catch (SQLException e) {
             // La pagina NO se rompe si la BD esta caida: se avisa y listo.
             log("No se pudo cargar el resumen del panel", e);
             request.setAttribute("errorBD", mensajeCorto(e));
+        }
+
+        try {
+            request.setAttribute("ultimasVentas", dashboard.ultimasVentas(5));
+        } catch (SQLException e) {
+            // Si esta consulta falla, la tabla simplemente sale vacia.
+            log("No se pudieron cargar las ultimas ventas", e);
         }
 
         request.setAttribute("fechaHoy", fechaHoy());

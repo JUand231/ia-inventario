@@ -1,8 +1,12 @@
 package com.adso.ia.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Salida {
+
+    /** Patron de texto para mostrar la fecha en las vistas (JSP). */
+    private static final DateTimeFormatter TEXTO = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     private int id;
     private int idProducto;
@@ -71,6 +75,15 @@ public class Salida {
 
     public LocalDateTime getFecha() {
         return fecha;
+    }
+
+    /**
+     * Fecha ya en texto ("02/11/2026 15:30") para las vistas.
+     * fmt:formatDate de JSTL solo entiende java.util.Date y no acepta
+     * LocalDateTime, por eso la vista usa este getter y no esa etiqueta.
+     */
+    public String getFechaTexto() {
+        return fecha == null ? "" : fecha.format(TEXTO);
     }
 
     public void setFecha(LocalDateTime fecha) {

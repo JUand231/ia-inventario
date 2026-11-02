@@ -14,28 +14,29 @@
         <meta name="theme-color" content="#0A2E58">
         <title>Saca Clavos · Salidas</title>
         <link rel="stylesheet" href="<c:url value='/assets/css/inventario.css' />">
+        <link rel="stylesheet" href="<c:url value='/assets/css/dashboard.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/modulos.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/widget-ia.css' />">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     </head>
-    <body>
+    <body class="dx-body">
 
         <% pageContext.setAttribute("paginaActiva", "salidas"); %>
         <%@ include file="componentes/topbar.jspf" %>
 
-        <main class="contenedor">
+        <main class="dx-contenedor">
 
-            <section class="encabezado">
-                <div class="encabezado__fila">
-                    <div>
-                        <h1 class="encabezado__titulo">Salidas manuales</h1>
-                        <span class="encabezado__fecha">Módulo 4 · Merma y ajustes</span>
-                    </div>
-                    <span class="chip"><span class="chip__punto"></span>Descuentos</span>
+            <!-- ===== Encabezado ===== -->
+            <header class="dx-head">
+                <div>
+                    <p class="dx-head__fecha">Módulo 4 · Merma y ajustes</p>
+                    <h1 class="dx-head__titulo">Salidas manuales</h1>
+                    <p class="dx-head__sub">Merma, daño o ajuste sin factura: el stock baja al instante.</p>
                 </div>
-            </section>
+                <span class="dx-chip dx-chip--warn"><span class="dx-chip__punto"></span>Descuentos</span>
+            </header>
 
             <c:if test="${not empty exito}">
                 <div class="caja-msg caja-msg--ok"><c:out value="${exito}" /></div>
@@ -44,21 +45,21 @@
                 <div class="caja-msg caja-msg--err"><c:out value="${error}" /></div>
             </c:if>
 
-            <section class="caja-card">
-                <div class="caja-card__cabecera">
-                    <span class="caja-card__icono" aria-hidden="true">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 12V3"/>
-                            <path d="M8.5 6.5L12 3l3.5 3.5"/>
-                            <path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>
-                        </svg>
-                    </span>
+            <!-- ===== Formulario en 3 pasos ===== -->
+            <section class="dx-panel">
+                <header class="dx-panel__head">
                     <div>
-                        <h2>¿Qué mercancía salió?</h2>
-                        <p class="caja-card__sub">Merma, daño o ajuste sin factura: el stock baja al instante</p>
+                        <h2 class="dx-panel__titulo">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M12 12V3"/>
+                                <path d="M8.5 6.5L12 3l3.5 3.5"/>
+                                <path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>
+                            </svg>
+                            ¿Qué mercancía salió?
+                        </h2>
+                        <p class="dx-panel__sub">Merma, daño o ajuste sin factura: el stock baja al instante</p>
                     </div>
-                </div>
+                </header>
 
                 <form method="post" action="<c:url value='/salidas' />">
                     <input type="hidden" name="accion" value="registrar">
@@ -111,30 +112,25 @@
                 </form>
             </section>
 
-            <section class="caja-card">
-                <div class="caja-card__cabecera">
-                    <span class="caja-card__icono" aria-hidden="true">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 6h16M4 12h16M4 18h10"/>
-                        </svg>
-                    </span>
+            <!-- ===== Historial ===== -->
+            <section class="dx-panel">
+                <header class="dx-panel__head">
                     <div>
-                        <h2>Historial de salidas</h2>
-                        <p class="caja-card__sub">Ventas facturadas y salidas manuales del inventario</p>
+                        <h2 class="dx-panel__titulo">Historial de salidas</h2>
+                        <p class="dx-panel__sub">Ventas facturadas y salidas manuales del inventario</p>
                     </div>
-                </div>
+                </header>
 
                 <c:choose>
                     <c:when test="${not empty salidas}">
-                        <div class="caja-tabla">
-                            <table>
+                        <div class="dx-tabla-wrap">
+                            <table class="dx-tabla">
                                 <thead>
                                     <tr>
                                         <th>Fecha</th>
                                         <th>Producto</th>
-                                        <th>Cant.</th>
-                                        <th>Precio unit.</th>
+                                        <th class="dx-c">Cant.</th>
+                                        <th class="dx-r">Precio unit.</th>
                                         <th>Cliente</th>
                                         <th>Motivo</th>
                                         <th>Origen</th>
@@ -143,10 +139,10 @@
                                 <tbody>
                                     <c:forEach items="${salidas}" var="s">
                                         <tr>
-                                            <td><fmt:formatDate value="${s.fecha}" pattern="dd/MM/yyyy HH:mm" /></td>
-                                            <td><c:out value="${s.nombreProducto}" /></td>
-                                            <td>${s.cantidad}</td>
-                                            <td><fmt:formatNumber value="${s.precioUnitario}" type="currency" currencyCode="COP" maxFractionDigits="0" /></td>
+                                            <td><c:out value="${s.fechaTexto}" /></td>
+                                            <td><span class="dx-cli"><c:out value="${s.nombreProducto}" /></span></td>
+                                            <td class="dx-c"><span class="dx-pill"><c:out value="${s.cantidad}" /></span></td>
+                                            <td class="dx-r dx-total"><fmt:formatNumber value="${s.precioUnitario}" type="currency" currencyCode="COP" maxFractionDigits="0" /></td>
                                             <td><c:out value="${s.cliente}" /></td>
                                             <td><c:out value="${empty s.observaciones ? '—' : s.observaciones}" /></td>
                                             <td>
@@ -166,14 +162,14 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <p class="caja-vacio">Aún no hay salidas registradas</p>
+                        <p class="dx-vacio" style="padding:20px !important;">Aún no hay salidas registradas.</p>
                     </c:otherwise>
                 </c:choose>
             </section>
 
         </main>
 
-        <footer class="pie">
+        <footer class="dx-pie">
             <p><strong>Saca Clavos</strong> · Sistema de inventario, facturación y asistente con inteligencia artificial</p>
         </footer>
 

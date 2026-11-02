@@ -14,58 +14,56 @@
         <meta name="theme-color" content="#0A2E58">
         <title>Saca Clavos · Alertas de stock</title>
         <link rel="stylesheet" href="<c:url value='/assets/css/inventario.css' />">
+        <link rel="stylesheet" href="<c:url value='/assets/css/dashboard.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/modulos.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/widget-ia.css' />">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     </head>
-    <body>
+    <body class="dx-body">
 
         <% pageContext.setAttribute("paginaActiva", "alertas"); %>
         <%@ include file="componentes/topbar.jspf" %>
 
-        <main class="contenedor">
+        <main class="dx-contenedor">
 
-            <section class="encabezado">
-                <div class="encabezado__fila">
-                    <div>
-                        <h1 class="encabezado__titulo">Alertas de stock</h1>
-                        <span class="encabezado__fecha">Módulo 5 · Monitoreo</span>
-                    </div>
-                    <span class="chip"><span class="chip__punto"></span>Reponer pronto</span>
+            <!-- ===== Encabezado ===== -->
+            <header class="dx-head">
+                <div>
+                    <p class="dx-head__fecha">Módulo 5 · Monitoreo</p>
+                    <h1 class="dx-head__titulo">Alertas de stock</h1>
+                    <p class="dx-head__sub">Productos por debajo del mínimo: repón a tiempo y evita quedarte sin mercancía.</p>
                 </div>
-            </section>
+                <span class="dx-chip dx-chip--warn"><span class="dx-chip__punto"></span>Reponer pronto</span>
+            </header>
 
             <c:if test="${not empty error}">
                 <div class="caja-msg caja-msg--err"><c:out value="${error}" /></div>
             </c:if>
 
-            <section class="caja-card caja-card--alerta">
-                <div class="caja-card__cabecera">
-                    <span class="caja-card__icono" aria-hidden="true">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>
-                            <path d="M12 9v4"/>
-                            <path d="M12 17h.01"/>
-                        </svg>
-                    </span>
+            <!-- ===== Panel de alertas ===== -->
+            <section class="dx-panel dx-panel--alertas">
+                <header class="dx-panel__head">
                     <div>
-                        <h2>Productos por debajo del mínimo</h2>
-                        <p class="caja-card__sub">Registra una entrada para reponer estos productos</p>
+                        <h2 class="dx-panel__titulo">
+                            <span class="dx-dot-alerta"></span>
+                            Productos por debajo del mínimo
+                        </h2>
+                        <p class="dx-panel__sub">Registra una entrada para reponer estos productos</p>
                     </div>
-                </div>
+                    <span class="dx-badge">Acción requerida</span>
+                </header>
 
                 <c:choose>
                     <c:when test="${not empty alertas}">
-                        <div class="caja-tabla">
-                            <table>
+                        <div class="dx-tabla-wrap">
+                            <table class="dx-tabla">
                                 <thead>
                                     <tr>
                                         <th>Producto</th>
-                                        <th>Stock actual</th>
-                                        <th>Stock mínimo</th>
+                                        <th class="dx-c">Stock actual</th>
+                                        <th class="dx-c">Stock mínimo</th>
                                         <th>Ubicación</th>
                                         <th>Estado</th>
                                     </tr>
@@ -73,11 +71,11 @@
                                 <tbody>
                                     <c:forEach items="${alertas}" var="a">
                                         <tr>
-                                            <td><c:out value="${a.nombre}" /></td>
-                                            <td class="stock-critico">${a.stock}</td>
-                                            <td>${a.stockMinimo}</td>
+                                            <td><span class="dx-cli"><c:out value="${a.nombre}" /></span></td>
+                                            <td class="dx-c"><span class="dx-stock"><c:out value="${a.stock}" /></span></td>
+                                            <td class="dx-c"><c:out value="${a.stockMinimo}" /></td>
                                             <td><c:out value="${empty a.ubicacion ? '—' : a.ubicacion}" /></td>
-                                            <td><span class="alerta-etiqueta">Stock bajo</span></td>
+                                            <td><span class="dx-badge">Stock bajo</span></td>
                                         </tr>
                                     </c:forEach>
                                 </tbody>
@@ -85,14 +83,14 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <p class="sin-alertas">Todo en orden: ningún producto está por debajo del mínimo</p>
+                        <p class="dx-vacio" style="padding:20px !important;">Todo el inventario está sobre el mínimo: ninguna alerta pendiente.</p>
                     </c:otherwise>
                 </c:choose>
             </section>
 
         </main>
 
-        <footer class="pie">
+        <footer class="dx-pie">
             <p><strong>Saca Clavos</strong> · Sistema de inventario, facturación y asistente con inteligencia artificial</p>
         </footer>
 
