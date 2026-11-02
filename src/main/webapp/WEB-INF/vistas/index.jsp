@@ -90,6 +90,138 @@
                     </span>
                 </a>
 
+                <a class="modulo" href="<c:url value='/productos' />">
+                    <div class="modulo__superior">
+                        <span class="modulo__icono" aria-hidden="true">
+                            <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/>
+                                <path d="M3 8l9 5 9-5"/>
+                                <path d="M12 13v8"/>
+                            </svg>
+                        </span>
+                        <div>
+                            <p class="modulo__etiqueta">Módulo 2 · Inventario</p>
+                            <h2 class="modulo__titulo">Productos</h2>
+                        </div>
+                    </div>
+                    <p class="modulo__desc">
+                        Administra el catálogo: precios, stock mínimo y ubicación
+                        de cada producto en almacén.
+                    </p>
+                    <ul class="modulo__lista">
+                        <li>Alta y edición</li>
+                        <li>Stock mínimo</li>
+                        <li>Borrado lógico</li>
+                    </ul>
+                    <span class="modulo__accion">
+                        Ver productos
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M13 6l6 6-6 6"/>
+                        </svg>
+                    </span>
+                </a>
+
+                <a class="modulo" href="<c:url value='/entradas' />">
+                    <div class="modulo__superior">
+                        <span class="modulo__icono" aria-hidden="true">
+                            <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 3v9"/>
+                                <path d="M8.5 8.5L12 12l3.5-3.5"/>
+                                <path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>
+                            </svg>
+                        </span>
+                        <div>
+                            <p class="modulo__etiqueta">Módulo 3 · Compras</p>
+                            <h2 class="modulo__titulo">Entradas</h2>
+                        </div>
+                    </div>
+                    <p class="modulo__desc">
+                        Registra la mercancía que ingresa al almacén:
+                        suma el stock del producto al instante.
+                    </p>
+                    <ul class="modulo__lista">
+                        <li>Proveedor</li>
+                        <li>Precio de compra</li>
+                        <li>Transacción segura</li>
+                    </ul>
+                    <span class="modulo__accion">
+                        Ver entradas
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M13 6l6 6-6 6"/>
+                        </svg>
+                    </span>
+                </a>
+
+                <a class="modulo" href="<c:url value='/salidas' />">
+                    <div class="modulo__superior">
+                        <span class="modulo__icono" aria-hidden="true">
+                            <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 12V3"/>
+                                <path d="M8.5 6.5L12 3l3.5 3.5"/>
+                                <path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>
+                            </svg>
+                        </span>
+                        <div>
+                            <p class="modulo__etiqueta">Módulo 4 · Merma y ajustes</p>
+                            <h2 class="modulo__titulo">Salidas manuales</h2>
+                        </div>
+                    </div>
+                    <p class="modulo__desc">
+                        Merma, daños o ajustes de inventario sin factura asociada:
+                        descuenta stock con control.
+                    </p>
+                    <ul class="modulo__lista">
+                        <li>Descuenta stock</li>
+                        <li>Sin factura</li>
+                        <li>Historial</li>
+                    </ul>
+                    <span class="modulo__accion">
+                        Ver salidas
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M13 6l6 6-6 6"/>
+                        </svg>
+                    </span>
+                </a>
+
+                <a class="modulo" href="<c:url value='/alertas' />">
+                    <div class="modulo__superior">
+                        <span class="modulo__icono" aria-hidden="true">
+                            <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 3L2.5 20h19L12 3z"/>
+                                <path d="M12 9v5"/>
+                                <path d="M12 17.5h.01"/>
+                            </svg>
+                        </span>
+                        <div>
+                            <p class="modulo__etiqueta">Módulo 5 · Monitoreo</p>
+                            <h2 class="modulo__titulo">Alertas</h2>
+                        </div>
+                    </div>
+                    <p class="modulo__desc">
+                        Productos que llegaron al stock mínimo: repón a tiempo
+                        y evita quedarte sin mercancía.
+                    </p>
+                    <ul class="modulo__lista">
+                        <li>Stock bajo</li>
+                        <li>Ubicación</li>
+                        <li>Lista para reponer</li>
+                    </ul>
+                    <span class="modulo__accion">
+                        Ver alertas
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M13 6l6 6-6 6"/>
+                        </svg>
+                    </span>
+                </a>
+
             </section>
 
             <!-- ============ Indicadores ============ -->
@@ -113,11 +245,11 @@
                             <p class="kpi__nota">piezas totales en almacén</p>
                         </article>
 
-                        <article class="kpi kpi--alerta">
+                        <a class="kpi kpi--alerta" href="<c:url value='/alertas' />" style="display:block;text-decoration:none;">
                             <p class="kpi__etiqueta">Stock bajo</p>
-                            <p class="kpi__valor"><fmt:formatNumber value="${resumen.productosStockBajo}" /></p>
-                            <p class="kpi__nota">productos en o por debajo del mínimo</p>
-                        </article>
+                            <p class="kpi__valor"><fmt:formatNumber value="${alertas}" /></p>
+                            <p class="kpi__nota">productos en o por debajo del mínimo · toca para ver las alertas</p>
+                        </a>
 
                         <article class="kpi kpi--venta">
                             <p class="kpi__etiqueta">Ventas de hoy</p>
