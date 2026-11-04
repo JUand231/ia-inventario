@@ -215,4 +215,111 @@ public class AsistenteDAO {
         }
         return lista;
     }
+
+    /** Cuanto se vendio de un producto en todos los tiempos. */
+    public JSONArray ventasProducto(String texto) throws SQLException {
+        String sql = "SELECT TOP 5 p.nombre, p.stock, p.precio_venta, "
+                + "ISNULL(SUM(s.cantidad), 0) AS unidades_vendidas, "
+                + "ISNULL(SUM(s.cantidad * s.precio_unitario), 0) AS total_vendido_cop "
+                + "FROM productos p LEFT JOIN salidas s ON s.Id_producto = p.Id "
+                + "WHERE p.estado = 1 AND p.nombre LIKE ? COLLATE Latin1_General_CI_AI "
+                + "GROUP BY p.nombre, p.stock, p.precio_venta ORDER BY p.nombre";
+        JSONArray lista = new JSONArray();
+        try (Connection cn = ConexionDB.getConexion(); PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, "%" + texto + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.put(new JSONObject()
+                            .put("nombre", rs.getString("nombre"))
+                            .put("stock_actual", rs.getInt("stock"))
+                            .put("precio_venta_cop", rs.getBigDecimal("precio_venta"))
+                            .put("unidades_vendidas", rs.getInt("unidades_vendidas"))
+                            .put("total_vendido_cop", rs.getBigDecimal("total_vendido_cop")));
+                }
+            }
+        }
+        return lista;
+    }
+
+    /** Los clientes que mas dinero han comprado. */
+    public JSONArray clientesTop(String periodo) throws SQLException {
+        String condicion = "todo".equals(periodo) ? "" : "WHERE fecha >= " + desde(periodo);
+        String sql = "SELECT TOP 5 cliente, COUNT(*) AS facturas, SUM(total) AS total_cop "
+                + "FROM facturas " + condicion + " GROUP BY cliente ORDER BY total_cop DESC";
+        JSONArray lista = new JSONArray();
+        try (Connection cn = ConexionDB.getConexion(); PreparedStatement ps = cn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                String cliente = rs.getString("cliente");
+                lista.put(new JSONObject()
+                        .put("cliente", cliente == null || cliente.trim().isEmpty() ? "Cliente general" : cliente)
+                        .put("facturas", rs.getInt("facturas"))
+                        .put("total_comprado_cop", rs.getBigDecimal("total_cop")));
+            }
+        }
+        return lista;
+    }
+
+    /** Ganancia bruta de un periodo: lo que se vendio menos lo que costo. */
+    public JSONObject ganancia(String periodo) throws SQLException {
+        String sql = "SELECT ISNULL(SUM(s.cantidad * s.precio_unitario), 0) AS ingreso, "
+                + "ISNULL(SUM(s.cantidad * p.precio_compra), 0) AS costo, "
+                + "ISNULL(SUM(s.cantidad * (s.precio_unitario - p.precio_compra)), 0) AS ganancia, "
+                + "ISNULL(SUM(s.cantidad), 0) AS unidades "
+                + "FROM salidas s JOIN productos p ON p.Id = s.Id_producto WHERE s.fecha >= " + desde(periodo);
+        try (Connection cn = ConexionDB.getConexion(); PreparedStatement ps = cn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            return new JSONObject()
+                    .put("periodo", periodo)
+                    .put("ingreso_cop", rs.getBigDecimal("ingreso"))
+                    .put("costo_cop", rs.getBigDecimal("costo"))
+                    .put("ganancia_bruta_cop", rs.getBigDecimal("ganancia"))
+                    .put("unidades_vendidas", rs.getInt("unidades"));
+        }
+    }
+
+    /** Productos extremos: el mas caro, el mas barato y el stock maximo/minimo. */
+    public JSONObject productosDestacados() throws SQLException {
+        String[] consultas = {
+            "SELECT TOP 1 nombre, precio_venta FROM productos WHERE estado = 1 ORDER BY precio_venta DESC",
+            "SELECT TOP 1 nombre, precio_venta FROM productos WHERE estado = 1 ORDER BY precio_venta ASC",
+            "SELECT TOP 1 nombre, stock FROM productos WHERE estado = 1 ORDER BY stock DESC",
+            "SELECT TOP 1 nombre, stock FROM productos WHERE estado = 1 ORDER BY stock ASC"
+        };
+        String[] claves = {"mas_caro", "mas_barato", "con_mas_stock", "con_menos_stock"};
+        JSONObject resultado = new JSONObject();
+        try (Connection cn = ConexionDB.getConexion()) {
+            for (int i = 0; i < consultas.length; i++) {
+                try (PreparedStatement ps = cn.prepareStatement(consultas[i]); ResultSet rs = ps.executeQuery()) {
+                    JSONObject item = new JSONObject();
+                    if (rs.next()) {
+                        item.put("nombre", rs.getString(1)).put("valor", rs.getObject(2));
+                    }
+                    resultado.put(claves[i], item);
+                }
+            }
+        }
+        return resultado;
+    }
+
+    /** Historial de compras a proveedores de un producto. */
+    public JSONArray entradasPorProducto(String texto) throws SQLException {
+        String sql = "SELECT TOP 5 e.fecha, e.cantidad, e.precio_unitario, e.proveedor, p.nombre AS producto "
+                + "FROM entradas e JOIN productos p ON p.Id = e.Id_producto "
+                + "WHERE p.nombre LIKE ? COLLATE Latin1_General_CI_AI ORDER BY e.fecha DESC";
+        JSONArray lista = new JSONArray();
+        try (Connection cn = ConexionDB.getConexion(); PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, "%" + texto + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.put(new JSONObject()
+                            .put("fecha", rs.getTimestamp("fecha").toLocalDateTime().toString())
+                            .put("producto", rs.getString("producto"))
+                            .put("cantidad", rs.getInt("cantidad"))
+                            .put("precio_unitario_cop", rs.getBigDecimal("precio_unitario"))
+                            .put("proveedor", rs.getString("proveedor")));
+                }
+            }
+        }
+        return lista;
+    }
 }

@@ -28,10 +28,11 @@ public class AsistenteService {
             = "Eres el asistente de la ferretería Saca Clavos. Respondes en español, de forma breve y clara, "
             + "en texto plano (sin markdown ni tablas). "
             + "Puedes ayudar con todo lo de la ferretería: productos, stock, precios, ubicaciones, ventas, "
-            + "facturas emitidas y clientes. Para cualquier dato DEBES usar las herramientas; "
-            + "nunca inventes cifras. Si una búsqueda no devuelve resultados, dilo y sugiere otro nombre. "
-            + "Los montos están en pesos colombianos (COP). Si preguntan algo que no tenga relación con la "
-            + "ferretería, responde amablemente que solo puedes ayudar con información de la ferretería.";
+            + "facturas emitidas, clientes, compras a proveedores y ganancias. Para cualquier dato DEBES "
+            + "usar las herramientas; nunca inventes cifras. Si una búsqueda no devuelve resultados, dilo y "
+            + "sugiere otro nombre. Los montos están en pesos colombianos (COP). Si preguntan algo que no "
+            + "tenga relación con la ferretería, responde amablemente que solo puedes ayudar con información "
+            + "de la ferretería.";
 
     private final AsistenteDAO dao = new AsistenteDAO();
 
@@ -149,6 +150,21 @@ public class AsistenteService {
                 String cliente = args.optString("cliente", "").trim();
                 return cliente.isEmpty() ? "{\"error\":\"falta el nombre del cliente\"}"
                         : dao.facturasPorCliente(cliente).toString();
+            case "ventas_producto":
+                String producto = args.optString("texto", "").trim();
+                return producto.isEmpty() ? "{\"error\":\"falta el texto a buscar\"}"
+                        : dao.ventasProducto(producto).toString();
+            case "clientes_top":
+                String periodoClientes = args.optString("periodo", "todo");
+                return dao.clientesTop(periodoClientes).toString();
+            case "ganancia_periodo":
+                return dao.ganancia(periodo).toString();
+            case "productos_destacados":
+                return dao.productosDestacados().toString();
+            case "entradas_por_producto":
+                String productoEntradas = args.optString("texto", "").trim();
+                return productoEntradas.isEmpty() ? "{\"error\":\"falta el texto a buscar\"}"
+                        : dao.entradasPorProducto(productoEntradas).toString();
             default:
                 return "{\"error\":\"herramienta desconocida\"}";
         }
@@ -159,6 +175,11 @@ public class AsistenteService {
                 .put("type", "string")
                 .put("enum", new JSONArray().put("hoy").put("semana").put("mes"))
                 .put("description", "hoy, semana (desde el lunes) o mes (desde el día 1)");
+
+        JSONObject periodoTodo = new JSONObject()
+                .put("type", "string")
+                .put("enum", new JSONArray().put("hoy").put("semana").put("mes").put("todo"))
+                .put("description", "hoy, semana (desde el lunes), mes (desde el día 1) o todo (histórico completo)");
 
         return new JSONArray()
                 .put(tool("buscar_producto",
@@ -185,6 +206,29 @@ public class AsistenteService {
                 .put(tool("mas_vendidos",
                         "Los 5 productos más vendidos en un periodo.",
                         new JSONObject().put("periodo", periodo), "periodo"))
+                .put(tool("ventas_producto",
+                        "Cuánto se vendió de un producto en todos los tiempos: unidades, dinero generado, "
+                        + "stock actual y precio. Úsalo para preguntas como '¿cuántos martillos se vendieron?'.",
+                        new JSONObject().put("texto", new JSONObject()
+                                .put("type", "string")
+                                .put("description", "Nombre del producto, ej: martillo, cemento, clavo")),
+                        "texto"))
+                .put(tool("clientes_top",
+                        "Los 5 clientes que más dinero han comprado: número de facturas y total comprado.",
+                        new JSONObject().put("periodo", periodoTodo), "periodo"))
+                .put(tool("ganancia_periodo",
+                        "Ganancia bruta de un periodo: ingreso menos costo de lo vendido.",
+                        new JSONObject().put("periodo", periodo), "periodo"))
+                .put(tool("productos_destacados",
+                        "Productos extremos de la ferretería: el más caro, el más barato, "
+                        + "el que más stock tiene y el que menos.",
+                        new JSONObject()))
+                .put(tool("entradas_por_producto",
+                        "Historial de compras a proveedores de un producto: fecha, cantidad, precio y proveedor.",
+                        new JSONObject().put("texto", new JSONObject()
+                                .put("type", "string")
+                                .put("description", "Nombre del producto, ej: cemento, silicona")),
+                        "texto"))
                 .put(tool("ultimas_facturas",
                         "Las últimas 5 facturas emitidas, ordenadas de la más reciente a la más antigua. "
                         + "La primera de la lista es la última factura emitida, la segunda es la penúltima "
