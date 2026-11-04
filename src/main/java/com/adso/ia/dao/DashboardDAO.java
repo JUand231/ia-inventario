@@ -31,10 +31,10 @@ public class DashboardDAO {
      */
     private static final String SQL_RESUMEN =
             "SELECT "
-            + " (SELECT COUNT(*) FROM productos) AS totalProductos, "
+            + " (SELECT COUNT(*) FROM productos WHERE estado = 1) AS totalProductos, "
             + " (SELECT COUNT(*) FROM categorias) AS totalCategorias, "
-            + " (SELECT ISNULL(SUM(stock), 0) FROM productos) AS unidadesStock, "
-            + " (SELECT COUNT(*) FROM productos WHERE stock <= stock_minimo) AS stockBajo, "
+            + " (SELECT ISNULL(SUM(stock), 0) FROM productos WHERE estado = 1) AS unidadesStock, "
+            + " (SELECT COUNT(*) FROM productos WHERE estado = 1 AND stock <= stock_minimo) AS stockBajo, "
             + " (SELECT ISNULL(SUM(cantidad * precio_unitario), 0) FROM salidas "
             + "   WHERE fecha >= CAST(GETDATE() AS DATE)) AS ventasHoy, "
             + " (SELECT ISNULL(SUM(cantidad * precio_unitario), 0) FROM salidas "
