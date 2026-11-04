@@ -18,62 +18,6 @@
     box-shadow: 0 0 0 4px rgba(21, 101, 192, .12), var(--sombra-sm);
 }
 
-/* ---------- Mensajes de éxito / error ---------- */
-@keyframes caja-entra {
-    from {
-        opacity: 0;
-        transform: translateY(16px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.caja-msg {
-    position: relative;
-    margin-bottom: 16px;
-    padding: 13px 16px 13px 46px;
-    border-radius: 12px;
-    font-size: .9rem;
-    font-weight: 600;
-    box-shadow: var(--sombra-sm);
-    animation: caja-entra .35s ease both;
-}
-
-.caja-msg::before {
-    content: "";
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-}
-
-.caja-msg--ok {
-    color: #15803D;
-    background: #ECFDF3;
-    border: 1px solid #BBE7CD;
-}
-
-.caja-msg--ok::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2316A34A' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M8.4 12.3l2.5 2.5 4.7-5.2'/%3E%3C/svg%3E");
-}
-
-.caja-msg--err {
-    color: #B91C1C;
-    background: #FEF2F2;
-    border: 1px solid #F6CBCB;
-}
-
-.caja-msg--err::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23DC2626' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M9 9l6 6M15 9l-6 6'/%3E%3C/svg%3E");
-}
-
 /* ---------- Pasos numerados del formulario ---------- */
 .paso {
     display: flex;

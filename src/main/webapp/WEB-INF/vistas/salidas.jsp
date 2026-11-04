@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="<c:url value='/assets/css/dashboard.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/modulos.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/widget-ia.css' />">
+        <%@ include file="componentes/avisos-css.jspf" %>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -38,12 +39,7 @@
                 <span class="dx-chip dx-chip--warn"><span class="dx-chip__punto"></span>Descuentos</span>
             </header>
 
-            <c:if test="${not empty exito}">
-                <div class="caja-msg caja-msg--ok"><c:out value="${exito}" /></div>
-            </c:if>
-            <c:if test="${not empty error}">
-                <div class="caja-msg caja-msg--err"><c:out value="${error}" /></div>
-            </c:if>
+            <%-- El mensaje de éxito/error lo muestra SweetAlert2 (ver avisos.js) --%>
 
             <!-- ===== Formulario en 3 pasos ===== -->
             <section class="dx-panel">
@@ -61,7 +57,12 @@
                     </div>
                 </header>
 
-                <form method="post" action="<c:url value='/salidas' />">
+                <form method="post" action="<c:url value='/salidas' />"
+                      class="aviso-confirmar"
+                      data-titulo="¿Sacar mercancía del stock?"
+                      data-texto-fn="textoSalida"
+                      data-boton="Sí, sacar"
+                      data-color="#B91C1C">
                     <input type="hidden" name="accion" value="registrar">
 
                     <p class="paso"><span class="paso__num">1</span> ¿Qué producto sale?</p>
@@ -175,7 +176,22 @@
 
         <%@ include file="componentes/widget-ia.jspf" %>
 
+        <%@ include file="componentes/avisos-js.jspf" %>
+
         <script>
+            /* Mensaje de la confirmación de salida: se arma con el producto
+               y la cantidad elegidos (lo lee avisos.js vía data-texto-fn). */
+            function textoSalida() {
+                var sel = document.getElementById('idProducto');
+                var opt = sel.options[sel.selectedIndex];
+                var nombre = opt.text.split(' (stock actual')[0].trim();
+                var n = parseInt(document.getElementById('cantidad').value, 10) || 0;
+                var stock = parseInt(opt.getAttribute('data-stock'), 10) || 0;
+                var quedan = stock - n;
+                return 'Se retirarán ' + n + ' unidad' + (n === 1 ? '' : 'es') + ' de ' + nombre +
+                        '. En stock quedarán ' + quedan + '.';
+            }
+
             (function () {
                 var sel = document.getElementById('idProducto');
                 var cant = document.getElementById('cantidad');

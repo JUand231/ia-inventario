@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="<c:url value='/assets/css/dashboard.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/modulos.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/widget-ia.css' />">
+        <%@ include file="componentes/avisos-css.jspf" %>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -38,9 +39,7 @@
                 <span class="dx-chip dx-chip--warn"><span class="dx-chip__punto"></span>Reponer pronto</span>
             </header>
 
-            <c:if test="${not empty error}">
-                <div class="caja-msg caja-msg--err"><c:out value="${error}" /></div>
-            </c:if>
+            <%-- El mensaje de error lo muestra SweetAlert2 (ver avisos.js) --%>
 
             <!-- ===== Panel de alertas ===== -->
             <section class="dx-panel dx-panel--alertas">
@@ -95,6 +94,8 @@
         </footer>
 
         <%@ include file="componentes/widget-ia.jspf" %>
+
+        <%@ include file="componentes/avisos-js.jspf" %>
 
     </body>
 </html>

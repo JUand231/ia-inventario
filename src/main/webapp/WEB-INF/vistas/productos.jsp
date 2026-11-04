@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="<c:url value='/assets/css/dashboard.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/modulos.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/widget-ia.css' />">
+        <%@ include file="componentes/avisos-css.jspf" %>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -38,12 +39,7 @@
                 <span class="dx-chip"><span class="dx-chip__punto"></span>Inventario activo</span>
             </header>
 
-            <c:if test="${not empty exito}">
-                <div class="caja-msg caja-msg--ok"><c:out value="${exito}" /></div>
-            </c:if>
-            <c:if test="${not empty error}">
-                <div class="caja-msg caja-msg--err"><c:out value="${error}" /></div>
-            </c:if>
+            <%-- El mensaje de éxito/error lo muestra SweetAlert2 (ver avisos.js) --%>
 
             <!-- ===== Formulario (nuevo / edición) ===== -->
             <section class="dx-panel${not empty editando ? ' dx-panel--editando' : ''}">
@@ -187,7 +183,11 @@
                                                 <div class="acciones">
                                                     <a class="btn-mini" href="<c:url value='/productos?accion=editar&id=' /><c:out value='${p.id}' />">Editar</a>
                                                     <form method="post" action="<c:url value='/productos' />"
-                                                          onsubmit="return confirm('¿Eliminar el producto? Se ocultará del inventario.')">
+                                                          class="aviso-confirmar"
+                                                          data-titulo="¿Eliminar <c:out value='${p.nombre}' />?"
+                                                          data-texto="Se ocultará del inventario y dejará de contarse en los indicadores."
+                                                          data-boton="Sí, eliminar"
+                                                          data-color="#B91C1C">
                                                         <input type="hidden" name="accion" value="eliminar">
                                                         <input type="hidden" name="id" value="${p.id}">
                                                         <button class="btn-mini btn-mini--rojo" type="submit">Eliminar</button>
@@ -213,6 +213,8 @@
         </footer>
 
         <%@ include file="componentes/widget-ia.jspf" %>
+
+        <%@ include file="componentes/avisos-js.jspf" %>
 
     </body>
 </html>

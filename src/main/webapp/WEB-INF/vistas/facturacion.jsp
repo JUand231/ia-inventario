@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="<c:url value='/assets/css/inventario.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/dashboard.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/widget-ia.css' />">
+        <%@ include file="componentes/avisos-css.jspf" %>
         <%-- Fuente elegante para la marca "SacaClavos" (con respaldo serif si no hay internet) --%>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -528,67 +529,11 @@
                 margin-top: 0;
             }
 
-            /* ---------- Mensajes de éxito / error ---------- */
-            .caja-msg {
-                position: relative;
-                margin-bottom: 18px;
-                padding: 13px 16px 13px 46px;
-                border-radius: 12px;
-                font-size: .9rem;
-                font-weight: 600;
-                box-shadow: var(--sombra-sm);
-                animation: caja-msg-entra .35s ease both;
-            }
-
-            .caja-msg::before {
-                content: "";
-                position: absolute;
-                left: 15px;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 20px;
-                height: 20px;
-                background-repeat: no-repeat;
-                background-position: center;
-                background-size: contain;
-            }
-
-            .caja-msg--ok {
-                color: #15803D;
-                background: #ECFDF3;
-                border: 1px solid #BBE7CD;
-            }
-
-            .caja-msg--ok::before {
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2316A34A' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M8.4 12.3l2.5 2.5 4.7-5.2'/%3E%3C/svg%3E");
-            }
-
-            .caja-msg--err {
-                color: #B91C1C;
-                background: #FEF2F2;
-                border: 1px solid #F6CBCB;
-            }
-
-            .caja-msg--err::before {
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23DC2626' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M9 9l6 6M15 9l-6 6'/%3E%3C/svg%3E");
-            }
-
             /* ---------- Animaciones ---------- */
             @keyframes caja-entra {
                 from {
                     opacity: 0;
                     transform: translateY(16px);
-                }
-                to {
-                    opacity: 1;
-                    transform: none;
-                }
-            }
-
-            @keyframes caja-msg-entra {
-                from {
-                    opacity: 0;
-                    transform: translateY(-8px);
                 }
                 to {
                     opacity: 1;
@@ -647,12 +592,9 @@
                 <span class="dx-chip"><span class="dx-chip__punto"></span>Caja abierta</span>
             </header>
 
-            <c:if test="${not empty exito}">
-                <div class="caja-msg caja-msg--ok"><c:out value="${exito}" /></div>
-            </c:if>
-            <c:if test="${not empty error}">
-                <div class="caja-msg caja-msg--err"><c:out value="${error}" /></div>
-            </c:if>
+            <%-- El mensaje de "Factura #N registrada" lo muestra SweetAlert2
+                 como ventana modal (avisos.js lee modoAviso = ventana) --%>
+            <c:set var="modoAviso" value="ventana" />
 
             <div class="caja">
 
@@ -838,5 +780,7 @@
             }
             pintar();
         </script>
+
+        <%@ include file="componentes/avisos-js.jspf" %>
     </body>
 </html>

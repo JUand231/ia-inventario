@@ -1,0 +1,16 @@
+<%-- =====================================================================
+     SweetAlert2 (CDN) + avisos.js · JS de los avisos del sistema.
+     Se incluye al final del <body> de cada vista que muestra mensajes
+     o pide confirmaciones.
+
+     El div "datos-aviso" es invisible y solo transporta el mensaje
+     que dejó el servlet (${exito} / ${error}); avisos.js lo lee y lo
+     muestra como toast (arriba) o como ventana modal, según data-modo.
+     ===================================================================== --%>
+<div id="datos-aviso" hidden
+     data-exito="<c:out value='${exito}' />"
+     data-error="<c:out value='${error}' />"
+     data-modo="<c:out value='${modoAviso}' />"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+<script src="<c:url value='/assets/js/avisos.js' />"></script>

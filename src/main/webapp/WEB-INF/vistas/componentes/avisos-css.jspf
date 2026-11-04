@@ -1,0 +1,7 @@
+<%-- =====================================================================
+     SweetAlert2 (CDN) · CSS de los avisos del sistema.
+     Se incluye en el <head> de cada vista que muestra mensajes
+     o pide confirmaciones (productos, entradas, salidas,
+     facturación y alertas).
+     ===================================================================== --%>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">

@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="<c:url value='/assets/css/dashboard.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/modulos.css' />">
         <link rel="stylesheet" href="<c:url value='/assets/css/widget-ia.css' />">
+        <%@ include file="componentes/avisos-css.jspf" %>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -38,12 +39,7 @@
                 <span class="dx-chip"><span class="dx-chip__punto"></span>Almacén</span>
             </header>
 
-            <c:if test="${not empty exito}">
-                <div class="caja-msg caja-msg--ok"><c:out value="${exito}" /></div>
-            </c:if>
-            <c:if test="${not empty error}">
-                <div class="caja-msg caja-msg--err"><c:out value="${error}" /></div>
-            </c:if>
+            <%-- El mensaje de éxito/error lo muestra SweetAlert2 (ver avisos.js) --%>
 
             <!-- ===== Formulario en 3 pasos ===== -->
             <section class="dx-panel">
@@ -168,6 +164,8 @@
         </footer>
 
         <%@ include file="componentes/widget-ia.jspf" %>
+
+        <%@ include file="componentes/avisos-js.jspf" %>
 
         <script>
             (function () {
