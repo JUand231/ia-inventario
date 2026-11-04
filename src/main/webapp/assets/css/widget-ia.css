@@ -433,12 +433,3 @@
     }
 }
 
-/* --------------------------------------------------------------------------
-   5. AJUSTE DEL INICIO
-   Al quitar la tarjeta "Consulta IA" queda un solo módulo en la rejilla:
-   se limita su ancho para que no se estire a todo el contenedor.
-   -------------------------------------------------------------------------- */
-
-.modulos {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 540px));
-}
