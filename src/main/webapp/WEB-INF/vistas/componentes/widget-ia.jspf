@@ -67,10 +67,8 @@
 
     <div class="ia-ventana__sugerencias">
         <button type="button" class="chat-chip">¿Dónde están los clavos?</button>
-        <button type="button" class="chat-chip">¿Cuánto cemento queda?</button>
         <button type="button" class="chat-chip">¿Cómo van las ventas de hoy?</button>
         <button type="button" class="chat-chip">¿Qué productos tienen stock bajo?</button>
-        <button type="button" class="chat-chip">¿Qué se ha vendido más este mes?</button>
     </div>
 
     <form class="ia-ventana__pie" id="formChat">
