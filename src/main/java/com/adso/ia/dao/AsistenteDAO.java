@@ -1,6 +1,7 @@
 package com.adso.ia.dao;
 
 import com.adso.ia.util.ConexionDB;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -52,16 +53,73 @@ public class AsistenteDAO {
     }
 
     public JSONObject ventas(String periodo) throws SQLException {
+        // Desglose: separa lo que salió con factura de lo que salió como
+        // salida manual (merma/ajuste, Id_factura NULL).
         String sql = "SELECT ISNULL(SUM(cantidad * precio_unitario), 0) AS total, "
-                + "ISNULL(SUM(cantidad), 0) AS unidades, COUNT(*) AS lineas "
+                + "ISNULL(SUM(cantidad), 0) AS unidades, COUNT(*) AS lineas, "
+                + "ISNULL(SUM(CASE WHEN Id_factura IS NULL THEN cantidad ELSE 0 END), 0) AS uni_manuales, "
+                + "ISNULL(SUM(CASE WHEN Id_factura IS NULL THEN cantidad * precio_unitario ELSE 0 END), 0) AS total_manuales, "
+                + "ISNULL(SUM(CASE WHEN Id_factura IS NULL THEN 1 ELSE 0 END), 0) AS lineas_manuales "
                 + "FROM salidas WHERE fecha >= " + desde(periodo);
         try (Connection cn = ConexionDB.getConexion(); PreparedStatement ps = cn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             rs.next();
+            BigDecimal total = rs.getBigDecimal("total");
+            BigDecimal totalManuales = rs.getBigDecimal("total_manuales");
+            int unidades = rs.getInt("unidades");
+            int uniManuales = rs.getInt("uni_manuales");
+            int lineas = rs.getInt("lineas");
+            int lineasManuales = rs.getInt("lineas_manuales");
             return new JSONObject()
                     .put("periodo", periodo)
-                    .put("total_vendido_cop", rs.getBigDecimal("total"))
-                    .put("unidades_vendidas", rs.getInt("unidades"))
-                    .put("lineas_de_venta", rs.getInt("lineas"));
+                    .put("total_vendido_cop", total)
+                    .put("unidades_vendidas", unidades)
+                    .put("lineas_de_venta", lineas)
+                    .put("salidas_manuales", new JSONObject()
+                            .put("unidades", uniManuales)
+                            .put("lineas", lineasManuales)
+                            .put("total_cop", totalManuales))
+                    .put("ventas_con_factura", new JSONObject()
+                            .put("unidades", unidades - uniManuales)
+                            .put("lineas", lineas - lineasManuales)
+                            .put("total_cop", total.subtract(totalManuales)));
+        }
+    }
+
+    /** Últimas entradas de mercancía a la bodega (compras a proveedores). */
+    public JSONArray entradasRecientes() throws SQLException {
+        String sql = "SELECT TOP 5 e.fecha, e.cantidad, e.precio_unitario, e.proveedor, p.nombre AS producto "
+                + "FROM entradas e JOIN productos p ON p.Id = e.Id_producto ORDER BY e.fecha DESC";
+        JSONArray lista = new JSONArray();
+        try (Connection cn = ConexionDB.getConexion(); PreparedStatement ps = cn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.put(new JSONObject()
+                        .put("fecha", rs.getTimestamp("fecha").toLocalDateTime().toString())
+                        .put("producto", rs.getString("producto"))
+                        .put("cantidad", rs.getInt("cantidad"))
+                        .put("precio_unitario_cop", rs.getBigDecimal("precio_unitario"))
+                        .put("proveedor", rs.getString("proveedor")));
+            }
+        }
+        return lista;
+    }
+
+    /** Cuentas globales del inventario: productos, unidades, valor y avisos. */
+    public JSONObject resumenInventario() throws SQLException {
+        String sql = "SELECT COUNT(*) AS productos, ISNULL(SUM(stock), 0) AS unidades, "
+                + "ISNULL(SUM(stock * precio_compra), 0) AS valor_costo, "
+                + "ISNULL(SUM(CASE WHEN stock = 0 THEN 1 ELSE 0 END), 0) AS agotados, "
+                + "ISNULL(SUM(CASE WHEN stock <= stock_minimo THEN 1 ELSE 0 END), 0) AS bajo_minimo, "
+                + "(SELECT COUNT(*) FROM categorias) AS categorias "
+                + "FROM productos WHERE estado = 1";
+        try (Connection cn = ConexionDB.getConexion(); PreparedStatement ps = cn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            return new JSONObject()
+                    .put("productos_activos", rs.getInt("productos"))
+                    .put("categorias", rs.getInt("categorias"))
+                    .put("unidades_en_stock", rs.getInt("unidades"))
+                    .put("valor_inventario_cop", rs.getBigDecimal("valor_costo"))
+                    .put("productos_agotados", rs.getInt("agotados"))
+                    .put("productos_bajo_minimo", rs.getInt("bajo_minimo"));
         }
     }
 

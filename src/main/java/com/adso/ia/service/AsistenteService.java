@@ -135,6 +135,10 @@ public class AsistenteService {
                 return dao.stockBajo().toString();
             case "mas_vendidos":
                 return dao.masVendidos(periodo).toString();
+            case "entradas_recientes":
+                return dao.entradasRecientes().toString();
+            case "resumen_inventario":
+                return dao.resumenInventario().toString();
             case "ultimas_facturas":
                 return dao.ultimasFacturas().toString();
             case "detalle_factura":
@@ -164,8 +168,17 @@ public class AsistenteService {
                                 .put("description", "Palabra clave del producto en singular, ej: tornillo, cemento, martillo")),
                         "texto"))
                 .put(tool("ventas_periodo",
-                        "Total vendido en pesos y unidades vendidas en un periodo.",
+                        "Unidades y dinero que salieron en un periodo, separando las ventas con factura "
+                        + "de las salidas manuales (merma o ajuste sin factura).",
                         new JSONObject().put("periodo", periodo), "periodo"))
+                .put(tool("entradas_recientes",
+                        "Las últimas 5 entradas de mercancía a la bodega: producto, cantidad, precio, "
+                        + "proveedor y fecha. Úsalo cuando pregunten qué mercancía entró o quién la trajo.",
+                        new JSONObject()))
+                .put(tool("resumen_inventario",
+                        "Cuentas globales del inventario: productos activos, categorías, unidades en stock, "
+                        + "valor del inventario, productos agotados y productos bajo mínimo.",
+                        new JSONObject()))
                 .put(tool("productos_stock_bajo",
                         "Lista los productos con stock igual o menor al mínimo.",
                         new JSONObject()))
