@@ -27,10 +27,11 @@ public class AsistenteService {
     private static final String SISTEMA
             = "Eres el asistente de la ferretería Saca Clavos. Respondes en español, de forma breve y clara, "
             + "en texto plano (sin markdown ni tablas). "
-            + "Para cualquier dato de productos, stock, precios, ubicaciones o ventas DEBES usar las herramientas; "
+            + "Puedes ayudar con todo lo de la ferretería: productos, stock, precios, ubicaciones, ventas, "
+            + "facturas emitidas y clientes. Para cualquier dato DEBES usar las herramientas; "
             + "nunca inventes cifras. Si una búsqueda no devuelve resultados, dilo y sugiere otro nombre. "
-            + "Los montos están en pesos colombianos (COP). Si preguntan algo que no sea del inventario o de las "
-            + "ventas, responde amablemente que solo puedes ayudar con eso.";
+            + "Los montos están en pesos colombianos (COP). Si preguntan algo que no tenga relación con la "
+            + "ferretería, responde amablemente que solo puedes ayudar con información de la ferretería.";
 
     private final AsistenteDAO dao = new AsistenteDAO();
 
@@ -134,6 +135,16 @@ public class AsistenteService {
                 return dao.stockBajo().toString();
             case "mas_vendidos":
                 return dao.masVendidos(periodo).toString();
+            case "ultimas_facturas":
+                return dao.ultimasFacturas().toString();
+            case "detalle_factura":
+                int numero = args.optInt("numero", 0);
+                return numero <= 0 ? "{\"error\":\"falta el número de factura\"}"
+                        : dao.detalleFactura(numero).toString();
+            case "facturas_por_cliente":
+                String cliente = args.optString("cliente", "").trim();
+                return cliente.isEmpty() ? "{\"error\":\"falta el nombre del cliente\"}"
+                        : dao.facturasPorCliente(cliente).toString();
             default:
                 return "{\"error\":\"herramienta desconocida\"}";
         }
@@ -160,7 +171,27 @@ public class AsistenteService {
                         new JSONObject()))
                 .put(tool("mas_vendidos",
                         "Los 5 productos más vendidos en un periodo.",
-                        new JSONObject().put("periodo", periodo), "periodo"));
+                        new JSONObject().put("periodo", periodo), "periodo"))
+                .put(tool("ultimas_facturas",
+                        "Las últimas 5 facturas emitidas, ordenadas de la más reciente a la más antigua. "
+                        + "La primera de la lista es la última factura emitida, la segunda es la penúltima "
+                        + "y la tercera es la antepenúltima. Devuelve número, fecha, cliente, "
+                        + "método de pago y total de cada una.",
+                        new JSONObject()))
+                .put(tool("detalle_factura",
+                        "Lo que se compró en una factura: productos, cantidad y subtotal. "
+                        + "Úsalo cuando pregunten qué compraron en una factura.",
+                        new JSONObject().put("numero", new JSONObject()
+                                .put("type", "integer")
+                                .put("description", "Número de la factura, ej: 9")),
+                        "numero"))
+                .put(tool("facturas_por_cliente",
+                        "Facturas de un cliente (búsqueda por nombre parcial): número, fecha y total. "
+                        + "Úsalo cuando pregunten qué compró o cuánto facturó una persona.",
+                        new JSONObject().put("cliente", new JSONObject()
+                                .put("type", "string")
+                                .put("description", "Nombre del cliente o parte de él, ej: Carmen")),
+                        "cliente"));
     }
 
     private static JSONObject tool(String nombre, String descripcion, JSONObject propiedades, String... requeridos) {
